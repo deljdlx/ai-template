@@ -47,6 +47,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
   - Enable browser back/forward navigation between API tabs
   - Shareable URLs for specific API categories (e.g., /api/php)
   - Better UX with proper routing and history management
+- Refine homepage messaging with more professional product-language in hero and overview sections (`codex`)
 - Add tabbed navigation to frontend API page (`copilot`)
   - Implement 5 sub-tabs: Combined, Framework, PHP, Runtime, Packages
   - Show one category at a time for focused exploration
