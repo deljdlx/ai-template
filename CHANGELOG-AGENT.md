@@ -39,6 +39,14 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Integrate API tabs into router with proper URL routing (`copilot`)
+  - Add `/api/:tab` route to handle sub-tabs (combined, framework, php, runtime, packages)
+  - Replace tab buttons with router links for proper navigation
+  - Update `setActiveLink()` to mark /api active for all /api/* routes
+  - Remove client-side `switchApiTab()` function (now handled by router)
+  - Enable browser back/forward navigation between API tabs
+  - Shareable URLs for specific API categories (e.g., /api/php)
+  - Better UX with proper routing and history management
 - Add tabbed navigation to frontend API page (`copilot`)
   - Implement 5 sub-tabs: Combined, Framework, PHP, Runtime, Packages
   - Show one category at a time for focused exploration

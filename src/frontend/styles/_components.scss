@@ -463,12 +463,14 @@
 }
 
 .api-tabs__tab {
+  display: inline-block;
   flex-shrink: 0;
   padding: 0.5rem vars.$space-md;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  text-decoration: none;
   background: transparent;
   border: 1px solid transparent;
   border-radius: vars.$radius-sm;
