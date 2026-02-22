@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shuffle, flatten, unique, groupBy } from '../src/arrays.js';
+import { shuffle, flatten, unique, groupBy } from '../arrays.js';
 
 describe('shuffle', () => {
   it('should return same length array', () => {

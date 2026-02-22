@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { reverse, isPalindrome, charFrequency, spongebobCase } from '../src/strings.js';
+import { reverse, isPalindrome, charFrequency, spongebobCase } from '../strings.js';
 
 describe('reverse', () => {
   it('should reverse a string', () => {
