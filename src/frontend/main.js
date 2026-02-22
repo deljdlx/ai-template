@@ -382,8 +382,8 @@ const router = createRouter({
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
-    { path: '/api', render: () => renderApi() },
     { path: '/api/:tab', render: ({ tab }) => renderApi({ tab }) },
+    { path: '/api', render: () => renderApi() },
   ],
   notFound: ({ path }) => `
     <div class="not-found">
