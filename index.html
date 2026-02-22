@@ -169,6 +169,116 @@
       color: var(--text-dim);
     }
 
+    /* ============ CLICK COUNTER ============ */
+
+    .click-counter {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      max-width: 280px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    .click-counter::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--amber);
+      box-shadow: 0 0 20px var(--amber-glow);
+    }
+
+    .click-counter__display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .click-counter__label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .click-counter__value {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--amber);
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .click-counter__btn {
+      background: transparent;
+      border: 2px solid var(--amber-dim);
+      color: var(--amber);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.8rem 2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .click-counter__btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--amber);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .click-counter__btn-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .click-counter__btn:hover {
+      border-color: var(--amber);
+      box-shadow: 0 0 20px var(--amber-glow);
+      transform: translateY(-2px);
+    }
+
+    .click-counter__btn:hover::before {
+      opacity: 0.1;
+    }
+
+    .click-counter__btn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .click-counter__btn.clicked {
+      animation: btnFlash 0.3s ease-out;
+    }
+
+    @keyframes btnFlash {
+      0%, 100% {
+        border-color: var(--amber-dim);
+      }
+      50% {
+        border-color: var(--amber);
+        box-shadow: 0 0 30px var(--amber-glow);
+      }
+    }
+
     /* ============ STATIONS ============ */
 
     .stations {
@@ -518,6 +628,17 @@
         <span class="spec__value">∞</span>
         <span class="spec__label">Usefulness</span>
       </div>
+    </div>
+
+    <!-- Click Counter -->
+    <div class="click-counter">
+      <div class="click-counter__display">
+        <span class="click-counter__label">Total clicks</span>
+        <span class="click-counter__value" id="clickCount">0</span>
+      </div>
+      <button class="click-counter__btn" id="clickBtn">
+        <span class="click-counter__btn-text">Click me</span>
+      </button>
     </div>
   </header>
 
@@ -916,6 +1037,27 @@
 
     document.getElementById('fnCount').textContent = FN_COUNT;
     runBoot();
+
+    // ============ CLICK COUNTER ============
+
+    let clickCount = 0;
+    const clickCountEl = document.getElementById('clickCount');
+    const clickBtn = document.getElementById('clickBtn');
+
+    clickBtn.addEventListener('click', () => {
+      clickCount++;
+      clickCountEl.textContent = clickCount;
+
+      // Visual feedback
+      clickBtn.classList.remove('clicked');
+      void clickBtn.offsetWidth;
+      clickBtn.classList.add('clicked');
+
+      // Remove animation class after it completes
+      setTimeout(() => {
+        clickBtn.classList.remove('clicked');
+      }, 300);
+    });
   </script>
 
 </body>
