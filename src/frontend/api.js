@@ -36,3 +36,6 @@ export const getPhpInfo = () => fetchJson('/infos/php');
 
 /** @returns {Promise<Object>} Server runtime info (timestamps, app name) */
 export const getRuntimeInfo = () => fetchJson('/infos/runtime');
+
+/** @returns {Promise<Array>} List of installed Composer packages */
+export const getPackages = () => fetchJson('/infos/packages');

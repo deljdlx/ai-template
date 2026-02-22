@@ -4,7 +4,7 @@ import { createRouter } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
-import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo } from './api.js';
+import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from './api.js';
 
 initTheme();
 
@@ -78,9 +78,9 @@ function renderHome() {
       <a href="/api" data-router-link class="module-card">
         <span class="module-card__icon">{&thinsp;}</span>
         <div class="module-card__name">API</div>
-        <div class="module-card__count">4 endpoints</div>
+        <div class="module-card__count">5 endpoints</div>
         <div class="module-card__fn">
-          <code>infos</code> <code>laravel</code> <code>php</code> <code>runtime</code>
+          <code>infos</code> <code>laravel</code> <code>php</code> <code>runtime</code> <code>packages</code>
         </div>
       </a>
     </div>
@@ -217,6 +217,7 @@ function renderApi() {
     ${apiBlock('laravel', '/api/infos/laravel')}
     ${apiBlock('php', '/api/infos/php')}
     ${apiBlock('runtime', '/api/infos/runtime')}
+    ${apiBlock('packages', '/api/infos/packages')}
   `;
 }
 
@@ -227,6 +228,7 @@ const API_HANDLERS = {
   laravel: getLaravelInfo,
   php: getPhpInfo,
   runtime: getRuntimeInfo,
+  packages: getPackages,
 };
 
 async function handleApi(name) {

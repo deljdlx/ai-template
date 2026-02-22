@@ -6,6 +6,11 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add packages listing endpoint with full-stack integration (`claude`)
+  - `GET /api/infos/packages` — lists installed Composer packages (name, constraint, version, dev flag)
+  - `GetPackagesAction` — reads composer.json + composer.lock
+  - Frontend: API function + demo section on /api page
+  - Pest feature tests (3) + Vitest unit test (1)
 - Add multi-stack integration recipe for Vite + Laravel projects (`claude`)
   - Vite proxy configuration (with `/api/` trailing slash gotcha)
   - API client pattern with configurable `VITE_API_BASE`

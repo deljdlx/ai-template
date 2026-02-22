@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo } from '../api.js';
+import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from '../api.js';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
@@ -69,5 +69,19 @@ describe('getRuntimeInfo', () => {
 
     expect(result).toEqual(data);
     expect(mockFetch).toHaveBeenCalledWith('/api/infos/runtime', expect.any(Object));
+  });
+});
+
+describe('getPackages', () => {
+  it('should fetch from /api/infos/packages', async () => {
+    const data = [
+      { name: 'laravel/framework', constraint: '^12.0', version: 'v12.0.1', dev: false },
+    ];
+    mockFetch.mockResolvedValue(okResponse(data));
+
+    const result = await getPackages();
+
+    expect(result).toEqual(data);
+    expect(mockFetch).toHaveBeenCalledWith('/api/infos/packages', expect.any(Object));
   });
 });

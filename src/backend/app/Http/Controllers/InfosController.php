@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Domain\Infos\Actions\GetLaravelInfoAction;
+use App\Domain\Infos\Actions\GetPackagesAction;
 use App\Domain\Infos\Actions\GetPhpInfoAction;
 use App\Domain\Infos\Actions\GetRuntimeInfoAction;
 use Illuminate\Http\JsonResponse;
@@ -36,5 +37,10 @@ final class InfosController extends Controller
     public function runtime(GetRuntimeInfoAction $runtimeInfo): JsonResponse
     {
         return response()->json($runtimeInfo->execute());
+    }
+
+    public function packages(GetPackagesAction $packages): JsonResponse
+    {
+        return response()->json($packages->execute());
     }
 }
