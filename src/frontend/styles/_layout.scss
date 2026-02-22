@@ -1,0 +1,60 @@
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+// ═══════════════════════════════════════
+// LAYOUT — containers, header, page shell
+// ═══════════════════════════════════════
+
+.machine {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: vars.$space-md vars.$space-md vars.$space-2xl;
+
+  @include mix.respond-to(vars.$bp-sm) {
+    padding: vars.$space-xl vars.$space-lg vars.$space-3xl;
+  }
+}
+
+// Header
+.machine-header {
+  text-align: center;
+  padding: vars.$space-2xl 0 vars.$space-xl;
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin: vars.$space-lg auto 0;
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+}
+
+.machine-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text);
+
+  span {
+    color: var(--accent);
+  }
+}
+
+.machine-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-top: 0.75rem;
+}
+
+// Page content area
+.page-content {
+  animation: fade-in 0.3s ease;
+}

@@ -1,0 +1,390 @@
+@use 'variables' as vars;
+@use 'mixins' as mix;
+
+// ═══════════════════════════════════════
+// COMPONENTS
+// ═══════════════════════════════════════
+
+// ── Nav bar ──────────────────────────
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: vars.$space-xs;
+  margin: vars.$space-xl auto;
+  padding: vars.$space-xs;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: fit-content;
+}
+
+.nav-bar__link {
+  text-decoration: none;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: vars.$space-sm vars.$space-md;
+  border-radius: vars.$radius-sm;
+  transition: all vars.$transition-base;
+
+  &:hover {
+    color: var(--text);
+    background: var(--bg-input);
+  }
+
+  &[aria-current='page'] {
+    color: var(--accent-text);
+    background: var(--accent);
+    font-weight: 700;
+  }
+}
+
+// ── Theme toggle ─────────────────────
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  margin-left: vars.$space-xs;
+  font-size: 0.85rem;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: vars.$radius-sm;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    color vars.$transition-fast,
+    border-color vars.$transition-fast;
+
+  &:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  &::before {
+    content: '\2600'; // sun — click to switch to light
+  }
+}
+
+[data-theme='light'] .theme-toggle::before {
+  content: '\263E'; // moon — click to switch to dark
+}
+
+// ── Buttons ──────────────────────────
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: 1px solid var(--border);
+  border-radius: vars.$radius-sm;
+  padding: 0.55rem vars.$space-md;
+  cursor: pointer;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    opacity vars.$transition-fast,
+    border-color vars.$transition-fast,
+    background vars.$transition-fast;
+  background: transparent;
+  color: var(--text);
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+// ── Inputs ───────────────────────────
+
+.demo-input {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: vars.$radius-sm;
+  padding: vars.$space-sm 0.75rem;
+  color: var(--text);
+  outline: none;
+  min-width: 120px;
+  transition: border-color vars.$transition-fast;
+
+  &:focus {
+    @include mix.focus-glow;
+  }
+
+  &::placeholder {
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+}
+
+.demo-input--narrow {
+  width: 80px;
+  min-width: 80px;
+}
+
+// ── Cards (home page) ────────────────
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: vars.$space-md;
+  margin-top: vars.$space-md;
+}
+
+.module-card {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: vars.$space-lg;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    border-color vars.$transition-base,
+    box-shadow vars.$transition-base;
+
+  &:hover {
+    @include mix.card-hover;
+  }
+}
+
+.module-card__icon {
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.module-card__name {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-style: italic;
+  margin-bottom: vars.$space-xs;
+}
+
+.module-card__count {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75rem;
+}
+
+.module-card__fn {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+
+  code {
+    background: var(--bg-input);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+}
+
+// ── Stats ────────────────────────────
+
+.home-stats {
+  display: flex;
+  justify-content: center;
+  gap: vars.$space-xl;
+  margin-top: vars.$space-xl;
+  padding: vars.$space-md;
+  border-top: 1px solid var(--border);
+
+  @media (max-width: vars.$bp-sm) {
+    gap: vars.$space-md;
+  }
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat__value {
+  font-size: 1.8rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent);
+}
+
+.stat__label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  margin-top: 0.15rem;
+}
+
+// ── Page titles ──────────────────────
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-style: italic;
+  margin-bottom: vars.$space-xs;
+}
+
+.page-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: vars.$space-xl;
+}
+
+// ── Demo sections ────────────────────
+
+.demo-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: vars.$space-md;
+  overflow: hidden;
+}
+
+.demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem vars.$space-md;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-input);
+}
+
+.demo-header__name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.demo-header__sig {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.demo-body {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: vars.$space-md;
+
+  @media (max-width: vars.$bp-sm) {
+    flex-direction: column;
+
+    .demo-input {
+      width: 100%;
+    }
+  }
+}
+
+.demo-result {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem vars.$space-md;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: vars.$radius-sm;
+  font-size: 0.8rem;
+  min-height: 2.4rem;
+
+  code {
+    color: var(--yellow);
+    word-break: break-all;
+  }
+
+  .label {
+    color: var(--text-dim);
+    margin-right: vars.$space-sm;
+  }
+}
+
+.demo-result--empty {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.demo-result__error {
+  color: var(--red);
+}
+
+// ── Back link ────────────────────────
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: vars.$space-lg;
+  transition: color vars.$transition-fast;
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+// ── Ops counter ──────────────────────
+
+.ops-counter {
+  position: fixed;
+  bottom: vars.$space-md;
+  right: vars.$space-md;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  z-index: vars.$z-counter;
+}
+
+.ops-counter__value {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+// ── 404 ──────────────────────────────
+
+.not-found {
+  text-align: center;
+  padding: vars.$space-3xl vars.$space-md;
+}
+
+.not-found__code {
+  font-family: var(--font-serif);
+  font-size: 5rem;
+  font-style: italic;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.not-found__msg {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: vars.$space-md 0;
+}
