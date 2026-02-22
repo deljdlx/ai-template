@@ -9,7 +9,8 @@
 
 ## Instructions partagees
 
-**Lire TOUS les fichiers dans `ai-instructions/` au debut de chaque tache.**
+**Lire les fichiers dans `ai-instructions/` au debut de chaque tache**, en suivant l'ordre defini dans `ai-instructions/README.md`.
+Les items 1-4 (philosophy, git, changelog, css-scss) sont **obligatoires**. Les items 5-8 (Laravel) sont **conditionnels** selon la stack du projet.
 Ces fichiers sont la source de verite pour le style, les regles, la branch safety, le workflow de publication, le mode autonome, et le travail concurrent.
 
 Au debut de chaque session, confirmer la lecture de ces instructions.

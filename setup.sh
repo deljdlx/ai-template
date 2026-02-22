@@ -50,6 +50,17 @@ done
 
 echo ""
 
+# ── 1b. Verify no unresolved placeholders remain ─────────────
+
+echo "→ Verifying no {{PROJECT}} placeholders remain..."
+REMAINING=$(grep -rl '{{PROJECT}}' --include="*.md" . 2>/dev/null || true)
+if [ -n "$REMAINING" ]; then
+  echo "  ⚠ WARNING: {{PROJECT}} still found in:"
+  echo "$REMAINING" | sed 's/^/    /'
+  echo "  These files may need manual review."
+fi
+echo ""
+
 # ── 2. Remove demo code ──────────────────────────────────────
 
 echo "→ Removing demo code..."

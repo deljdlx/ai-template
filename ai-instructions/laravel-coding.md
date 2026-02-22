@@ -392,7 +392,7 @@ Quand utiliser les events:
 declare(strict_types=1);
 ```
 
-Premiere ligne de **chaque** fichier PHP. Sans exception. Pint peut l'ajouter automatiquement.
+Premiere ligne de **chaque** fichier PHP applicatif. Seule exception: les fichiers generes par le framework (stubs, migrations auto-generees) qui seront corriges au prochain passage de Pint.
 
 ### Type hints exhaustifs
 

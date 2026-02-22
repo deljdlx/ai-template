@@ -6,6 +6,8 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add pre-flight checklist and autonomous mode trigger phrase table in git.md (`claude`) — #17
+- Add placeholder verification step in setup.sh (`claude`) — #17
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 - Add cross-references between instruction files and migration conflict guidance (`claude`) — #15
 - Add interactive Laravel packages recipe: Sanctum, Passport, Spatie essentiels, extras (`claude`) — #12
@@ -22,9 +24,12 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add changelog maintenance instructions for agents (`claude`) — #2
 
 ### Fixed
+- Fix working tree read/write vs read-only contradiction in git.md section 3 (`claude`) — #17
+- Fix "lire TOUS les fichiers" contradiction with conditional recipes in agent files (`claude`) — #17
 - Fix storage/debugbar/ not ignored by .gitignore (`claude`) — #13
 
 ### Changed
+- Soften strict_types rule to acknowledge framework-generated files (`claude`) — #17
 - Consolidate multi-agent instructions: resolve contradictions, deduplicate anti-patterns, add worktree reuse logic, lock file and migration conflict strategies, agent communication protocol (`claude`) — #15
 - Update packages recipe: allow Sanctum + Passport coexistence with separate guards (`claude`) — #14
 - Redesign all pages with "Useless Machine" retro-industrial identity and interactive demos (`claude`) — #4
