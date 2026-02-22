@@ -38,17 +38,17 @@ function esc(str) {
 function renderHome() {
   return `
     <div class="home-intro">
-      <h2 class="home-intro__title">What is this?</h2>
+      <h2 class="home-intro__title">Overview</h2>
       <p class="home-intro__text">
-        This is a <strong>modern frontend stack playground</strong> built with <strong>Vite</strong>, <strong>vanilla JavaScript</strong>, and <strong>responsive CSS</strong>.
-        It demonstrates best practices for:
+        This project provides a <strong>professional frontend baseline</strong> built with <strong>Vite</strong>, <strong>modular vanilla JavaScript</strong>, and <strong>responsive CSS</strong>.
+        It highlights implementation standards for:
       </p>
       <ul class="home-intro__list">
-        <li><strong>Client-side routing</strong> — single-page navigation without framework overhead</li>
-        <li><strong>Component architecture</strong> — modular utilities with lazy-loaded demos</li>
-        <li><strong>API integration</strong> — seamless communication with a Laravel backend</li>
-        <li><strong>Theme management</strong> — persistent dark/light mode with localStorage</li>
-        <li><strong>Testing strategy</strong> — unit tests for pure functions and utilities</li>
+        <li><strong>Client-side routing</strong> — efficient single-page navigation with explicit route handling</li>
+        <li><strong>Modular architecture</strong> — clear separation between UI rendering, domain utilities, and adapters</li>
+        <li><strong>Backend integration</strong> — reliable communication with a Laravel API layer</li>
+        <li><strong>Theme management</strong> — persistent user preferences via localStorage</li>
+        <li><strong>Testing discipline</strong> — focused unit tests for pure functions and shared utilities</li>
       </ul>
     </div>
 
