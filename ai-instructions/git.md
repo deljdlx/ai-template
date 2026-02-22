@@ -77,20 +77,25 @@ git worktree add /tmp/{{PROJECT}}-AGENT_NAME-worktree origin/main
 # Si present → le reutiliser:
 cd /tmp/{{PROJECT}}-AGENT_NAME-worktree
 git fetch origin
-git checkout --detach origin/main
 
-# 2. Se placer dans le worktree
-cd /tmp/{{PROJECT}}-AGENT_NAME-worktree
-
-# 3. Verifier l'etat
+# 2. Nettoyer le worktree avant de changer de branche
 git status
-# Changements non commites? → stash ou demander
+
+# Changements trackes non commites? → stash ou demander
+# Fichiers non suivis (untracked) d'une ancienne tache? → les supprimer:
+git clean -fd
 # Ancienne branche locale? → git branch -d AGENT_NAME/ancienne-branche
 
+git checkout --detach origin/main
+
+# 3. Se placer dans le worktree
+cd /tmp/{{PROJECT}}-AGENT_NAME-worktree
+
 # 4. Creer la branche de travail
-git fetch origin
 git checkout -b AGENT_NAME/FEATURE_NAME origin/main
 ```
+
+**Important**: `git clean -fd` supprime les fichiers non suivis et les dossiers vides. C'est necessaire car `git checkout` refuse de basculer si des fichiers non suivis dans le worktree entrent en conflit avec des fichiers de la branche cible. C'est le cas typique quand une tache precedente a cree des fichiers (ex: `src/backend/`) qui existent aussi sur `origin/main`.
 
 ### Pre-flight checklist
 
@@ -150,7 +155,9 @@ Le body de la PR doit contenir au minimum:
 gh pr checks NUMBER
 ```
 
-Ne pas merger tant que les checks ne sont pas tous verts. Si un check echoue, corriger et re-pusher.
+- Si des checks CI sont configures: ne pas merger tant qu'ils ne sont pas tous verts. Si un check echoue, corriger et re-pusher.
+- Si aucun check CI n'est configure (la commande retourne une liste vide ou une erreur "no checks"): passer directement a l'etape 5.
+- Si `gh pr checks` echoue pour cause reseau (timeout, DNS): passer a l'etape 5. L'absence de verification CI n'est pas un bloqueur si le repo n'a pas de CI.
 
 ### Etape 5 — Merge
 
