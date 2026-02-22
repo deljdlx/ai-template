@@ -6,6 +6,8 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add JavaScript conventions file with modules, functions, async, DOM, TypeScript sections (`claude`) — #18
+- Add error handling / diagnostic sections to stack-vite.md and stack-laravel.md (`claude`) — #18
 - Add pre-flight checklist and autonomous mode trigger phrase table in git.md (`claude`) — #17
 - Add placeholder verification step in setup.sh (`claude`) — #17
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
