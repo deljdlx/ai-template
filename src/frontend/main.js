@@ -411,7 +411,7 @@ const router = createRouter({
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
-    { path: '/api/:tab', render: ({ tab }) => renderApi({ tab }) },
+    { path: '/api/:tab', render: ({ params }) => renderApi({ tab: params.tab }) },
     { path: '/api', render: () => renderApi() },
   ],
   notFound: ({ path }) => `
