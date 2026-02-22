@@ -1,6 +1,7 @@
 import './styles/main.scss';
 import { initTheme, toggleTheme } from './theme.js';
 import { createRouter, normalizePath, toHashHref } from './router.js';
+import { createFeatureFlagsPage } from './pages/feature-flags-page.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
@@ -54,6 +55,30 @@ function esc(str) {
 function routeHref(path) {
   return toHashHref(path);
 }
+
+function val(name) {
+  const el = app.querySelector(`[data-input="${name}"]`);
+  return el ? el.value : '';
+}
+
+function setInputValue(name, value) {
+  const el = app.querySelector(`[data-input="${name}"]`);
+  if (el) {
+    el.value = value;
+  }
+}
+
+const featureFlagsPage = createFeatureFlagsPage({
+  app,
+  routeHref,
+  esc,
+  getInputValue: val,
+  setInputValue,
+  getFeatureFlags,
+  createFeatureFlag,
+  updateFeatureFlag,
+  deleteFeatureFlag,
+});
 
 /* ─── PAGE RENDERERS ─── */
 
@@ -411,135 +436,6 @@ async function handleAuth(action) {
   }
 }
 
-function renderFeatureFlags() {
-  return `
-    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
-    <h2 class="page-title">Feature Flags</h2>
-    <p class="page-desc">Create and manage Laravel Pennant flags (global scope).</p>
-    <p class="flags-note">
-      TODO: protect this page and API routes with auth/permissions before production use.
-    </p>
-
-    <div class="flags-form">
-      <input class="demo-input u-flex-1" data-input="flag-name" type="text" placeholder="flag name (e.g. checkout.v2)" />
-      <select class="demo-input demo-input--narrow" data-input="flag-enabled">
-        <option value="true" selected>enabled</option>
-        <option value="false">disabled</option>
-      </select>
-      <button class="btn btn--primary" data-flag-action="create">Create</button>
-    </div>
-
-    <div class="flags-feedback flags-feedback--empty" data-flags-feedback>no operation yet</div>
-    <div class="flags-list" data-flags-list>
-      <div class="api-result api-result--empty">loading feature flags&hellip;</div>
-    </div>
-  `;
-}
-
-function renderFeatureFlagsList(items) {
-  if (!items.length) {
-    return '<div class="api-result api-result--empty">no feature flags yet</div>';
-  }
-
-  return items
-    .map((item) => `
-      <div class="flags-item">
-        <div class="flags-item__meta">
-          <code class="flags-item__name">${esc(item.name)}</code>
-          <span class="flags-item__state" data-enabled="${item.enabled}">
-            ${item.enabled ? 'enabled' : 'disabled'}
-          </span>
-        </div>
-        <div class="flags-item__actions">
-          <button class="btn" data-flag-action="toggle" data-flag-name="${esc(item.name)}" data-flag-enabled="${item.enabled}">
-            ${item.enabled ? 'Disable' : 'Enable'}
-          </button>
-          <button class="btn" data-flag-action="delete" data-flag-name="${esc(item.name)}">Delete</button>
-        </div>
-      </div>
-    `)
-    .join('');
-}
-
-function setFeatureFlagsFeedback(message, type = 'neutral') {
-  const el = app.querySelector('[data-flags-feedback]');
-  if (!el) {
-    return;
-  }
-
-  el.className = `flags-feedback flags-feedback--${type}`;
-  el.textContent = message;
-}
-
-async function refreshFeatureFlagsList() {
-  const listEl = app.querySelector('[data-flags-list]');
-  if (!listEl) {
-    return;
-  }
-
-  listEl.innerHTML = '<div class="api-result api-result--empty">loading feature flags&hellip;</div>';
-
-  try {
-    const payload = await getFeatureFlags();
-    listEl.innerHTML = renderFeatureFlagsList(payload.items || []);
-  } catch (err) {
-    listEl.innerHTML = `<div class="api-result"><span class="api-result__error">${esc(err.message)}</span></div>`;
-  }
-}
-
-async function handleFeatureFlagAction(action, button) {
-  if (action === 'create') {
-    const name = val('flag-name').trim();
-    const enabled = val('flag-enabled') === 'true';
-
-    if (!name) {
-      setFeatureFlagsFeedback('name is required', 'error');
-      return;
-    }
-
-    try {
-      const result = await createFeatureFlag({ name, enabled });
-      setFeatureFlagsFeedback(`saved ${result.name} (${result.enabled ? 'enabled' : 'disabled'})`, 'success');
-      await refreshFeatureFlagsList();
-      const nameInput = app.querySelector('[data-input="flag-name"]');
-      if (nameInput) {
-        nameInput.value = '';
-      }
-    } catch (err) {
-      setFeatureFlagsFeedback(err.message, 'error');
-    }
-
-    return;
-  }
-
-  const name = button.dataset.flagName;
-  if (!name) {
-    return;
-  }
-
-  if (action === 'toggle') {
-    const currentEnabled = button.dataset.flagEnabled === 'true';
-    try {
-      const result = await updateFeatureFlag(name, !currentEnabled);
-      setFeatureFlagsFeedback(`updated ${result.name} (${result.enabled ? 'enabled' : 'disabled'})`, 'success');
-      await refreshFeatureFlagsList();
-    } catch (err) {
-      setFeatureFlagsFeedback(err.message, 'error');
-    }
-    return;
-  }
-
-  if (action === 'delete') {
-    try {
-      await deleteFeatureFlag(name);
-      setFeatureFlagsFeedback(`deleted ${name}`, 'success');
-      await refreshFeatureFlagsList();
-    } catch (err) {
-      setFeatureFlagsFeedback(err.message, 'error');
-    }
-  }
-}
-
 /* ─── API HANDLERS ─── */
 
 const API_HANDLERS = {
@@ -574,11 +470,6 @@ async function handleApi(name) {
 }
 
 /* ─── DEMO HANDLERS ─── */
-
-function val(name) {
-  const el = app.querySelector(`[data-input="${name}"]`);
-  return el ? el.value : '';
-}
 
 function showResult(id, html) {
   const el = app.querySelector(`[data-result="${id}"]`);
@@ -656,7 +547,7 @@ const router = createRouter({
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
-    { path: '/feature-flags', render: renderFeatureFlags },
+    { path: '/feature-flags', render: featureFlagsPage.render },
     { path: '/register', render: renderRegister },
     { path: '/login', render: renderLogin },
     { path: '/api/:tab', render: ({ params }) => renderApi({ tab: params.tab }) },
@@ -675,9 +566,7 @@ const router = createRouter({
     app.offsetHeight;
     app.style.animation = '';
 
-    if (path.startsWith('/feature-flags')) {
-      void refreshFeatureFlagsList();
-    }
+    void featureFlagsPage.onRouteChange(path);
   },
 });
 
@@ -686,9 +575,13 @@ router.start();
 /* ─── DELEGATED CLICK HANDLERS ─── */
 
 app.addEventListener('click', (event) => {
-  const flagActionBtn = event.target.closest('[data-flag-action]');
-  if (flagActionBtn) {
-    void handleFeatureFlagAction(flagActionBtn.dataset.flagAction, flagActionBtn);
+  const featureFlagsClickPromise = featureFlagsPage.onClick(event);
+  void featureFlagsClickPromise.then((handled) => {
+    if (handled) {
+      bumpOps();
+    }
+  });
+  if (event.target.closest('[data-flag-action]')) {
     return;
   }
 
