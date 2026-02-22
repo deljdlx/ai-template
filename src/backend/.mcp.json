@@ -4,7 +4,7 @@
             "command": "wsl.exe",
             "args": [
                 "/usr/bin/php8.4",
-                "/tmp/ai-template-claude-worktree/src/backend/artisan",
+                "/home/debian/__dev/devenv/src/ai/src/backend/artisan",
                 "boost:mcp"
             ]
         }
