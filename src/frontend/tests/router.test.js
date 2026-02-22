@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizePath, createRouteMatcher, findMatchingRoute } from '../src/router.js';
+import { normalizePath, createRouteMatcher, findMatchingRoute } from '../router.js';
 
 describe('normalizePath', () => {
   it('normalizes empty and root paths', () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { add, multiply, fibonacci, isEven } from '../src/math.js';
+import { add, multiply, fibonacci, isEven } from '../math.js';
 
 describe('add', () => {
   it('should add two positive numbers', () => {
