@@ -1,7 +1,11 @@
+import './styles/main.scss';
+import { initTheme, toggleTheme } from './theme.js';
 import { createRouter } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
+
+initTheme();
 
 const app = document.querySelector('#app');
 const nav = document.querySelector('[data-nav]');
@@ -82,7 +86,7 @@ function demoBlock(name, sig, inputsHtml, resultId) {
       </div>
       <div class="demo-body">
         ${inputsHtml}
-        <button class="demo-run" data-run="${name}">Run</button>
+        <button class="btn btn--primary" data-run="${name}">Run</button>
         <div class="demo-result demo-result--empty" data-result="${resultId}">click run&hellip;</div>
       </div>
     </div>
@@ -122,19 +126,19 @@ function renderStrings() {
     <p class="page-desc">Over-engineered solutions to problems nobody has.</p>
 
     ${demoBlock('reverse', '(str) => string', `
-      <input class="demo-input" data-input="rev-str" placeholder="text" value="useless machine" style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="rev-str" placeholder="text" value="useless machine" />
     `, 'reverse')}
 
     ${demoBlock('isPalindrome', '(str) => boolean', `
-      <input class="demo-input" data-input="pal-str" placeholder="text" value="A man, a plan, a canal: Panama" style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="pal-str" placeholder="text" value="A man, a plan, a canal: Panama" />
     `, 'isPalindrome')}
 
     ${demoBlock('charFrequency', '(str) => {char: count}', `
-      <input class="demo-input" data-input="freq-str" placeholder="text" value="banana" style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="freq-str" placeholder="text" value="banana" />
     `, 'charFrequency')}
 
     ${demoBlock('spongebobCase', '(str) => string', `
-      <input class="demo-input" data-input="sponge-str" placeholder="text" value="this is very useful" style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="sponge-str" placeholder="text" value="this is very useful" />
     `, 'spongebobCase')}
   `;
 }
@@ -146,20 +150,20 @@ function renderArrays() {
     <p class="page-desc">Reinventing wheels, one function at a time.</p>
 
     ${demoBlock('shuffle', '(arr, seed?) => array  [Fisher-Yates]', `
-      <input class="demo-input" data-input="shuf-arr" placeholder="array" value="[1,2,3,4,5,6,7,8]" style="flex:1" />
-      <input class="demo-input" data-input="shuf-seed" placeholder="seed" value="42" style="width:80px" />
+      <input class="demo-input u-flex-1" data-input="shuf-arr" placeholder="array" value="[1,2,3,4,5,6,7,8]" />
+      <input class="demo-input demo-input--narrow" data-input="shuf-seed" placeholder="seed" value="42" />
     `, 'shuffle')}
 
     ${demoBlock('flatten', '(arr) => array', `
-      <input class="demo-input" data-input="flat-arr" placeholder="array" value="[1,[2,3],[4,[5]],6]" style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="flat-arr" placeholder="array" value="[1,[2,3],[4,[5]],6]" />
     `, 'flatten')}
 
     ${demoBlock('unique', '(arr) => array', `
-      <input class="demo-input" data-input="uniq-arr" placeholder="array" value="[3,1,4,1,5,9,2,6,5,3]" style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="uniq-arr" placeholder="array" value="[3,1,4,1,5,9,2,6,5,3]" />
     `, 'unique')}
 
     ${demoBlock('groupBy', '(arr, keyFn) => {key: items}', `
-      <input class="demo-input" data-input="group-arr" placeholder="items (JSON)" value='[{"t":"a","v":1},{"t":"b","v":2},{"t":"a","v":3}]' style="flex:1" />
+      <input class="demo-input u-flex-1" data-input="group-arr" placeholder="items (JSON)" value='[{"t":"a","v":1},{"t":"b","v":2},{"t":"a","v":3}]' />
     `, 'groupBy')}
   `;
 }
@@ -231,7 +235,7 @@ function handleRun(name) {
     const el = app.querySelector(`[data-result="${name}"]`);
     if (el) {
       el.classList.remove('demo-result--empty');
-      el.innerHTML = `<span style="color:var(--red)">Error: ${esc(err.message)}</span>`;
+      el.innerHTML = `<span class="demo-result__error">Error: ${esc(err.message)}</span>`;
     }
   }
 }
@@ -263,11 +267,17 @@ const router = createRouter({
 
 router.start();
 
-/* ─── DELEGATED CLICK HANDLER ─── */
+/* ─── DELEGATED CLICK HANDLERS ─── */
 
 app.addEventListener('click', (event) => {
   const runBtn = event.target.closest('[data-run]');
   if (runBtn) {
     handleRun(runBtn.dataset.run);
+  }
+});
+
+document.addEventListener('click', (event) => {
+  if (event.target.closest('[data-theme-toggle]')) {
+    toggleTheme();
   }
 });

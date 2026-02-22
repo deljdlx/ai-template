@@ -1,0 +1,25 @@
+@use 'variables' as vars;
+
+// ═══════════════════════════════════════
+// MIXINS
+// ═══════════════════════════════════════
+
+// Mobile-first responsive breakpoint
+@mixin respond-to($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}
+
+// Focus glow for interactive elements
+@mixin focus-glow {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+// Card hover effect
+@mixin card-hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
