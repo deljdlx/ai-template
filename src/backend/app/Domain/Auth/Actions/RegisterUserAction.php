@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 final class RegisterUserAction
 {
     /**
+     * Create a new user account and generate an initial Sanctum API token.
+     *
      * @param  array{name: string, email: string, password: string}  $data
      * @return array{user: User, token: string}
      */

@@ -11,6 +11,12 @@ use Illuminate\Http\Request;
 
 final class AuthController extends Controller
 {
+    /**
+     * Register a new user and return a Sanctum API token.
+     *
+     * Validates name, email (unique), and password (min 8, confirmed).
+     * Returns 201 with user profile and plaintext token.
+     */
     public function register(Request $request, RegisterUserAction $register): JsonResponse
     {
         $data = $request->validate([
@@ -31,6 +37,13 @@ final class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Authenticate with email/password and return a Sanctum API token.
+     *
+     * Delegates credential verification to LoginUserAction, which throws
+     * ValidationException on failure (same message for wrong password
+     * and non-existent email to prevent enumeration).
+     */
     public function login(Request $request, LoginUserAction $login): JsonResponse
     {
         $data = $request->validate([

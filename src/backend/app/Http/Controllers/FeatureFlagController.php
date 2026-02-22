@@ -12,13 +12,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * CRUD for global-scoped feature flags (Laravel Pennant).
+ *
+ * Flag names must match [a-z0-9._-] (e.g. "checkout.v2", "dark-mode").
+ */
 final class FeatureFlagController extends Controller
 {
-    /**
-     * Keep naming constraints centralized to avoid route/body validation drift.
-     */
+    /** Centralized name rules to keep route param and body validation in sync. */
     private const NAME_RULES = ['required', 'string', 'max:100', 'regex:/^[a-z0-9._-]+$/'];
 
+    /** List all global feature flags with their current enabled state. */
     public function index(GetFeatureFlagsAction $getFlags): JsonResponse
     {
         return response()->json([
@@ -27,6 +31,7 @@ final class FeatureFlagController extends Controller
         ]);
     }
 
+    /** Create or overwrite a global feature flag. */
     public function store(Request $request, UpsertFeatureFlagAction $upsert): JsonResponse
     {
         $data = $request->validate([
@@ -37,6 +42,7 @@ final class FeatureFlagController extends Controller
         return response()->json($upsert->execute($data['name'], $data['enabled']));
     }
 
+    /** Update the enabled state of an existing flag. */
     public function update(string $name, Request $request, UpsertFeatureFlagAction $upsert): JsonResponse
     {
         $validatedName = $this->validateFeatureFlagName($name);
@@ -48,15 +54,18 @@ final class FeatureFlagController extends Controller
         return response()->json($upsert->execute($validatedName, $data['enabled']));
     }
 
+    /** Delete a feature flag permanently. Returns 204 No Content. */
     public function destroy(string $name, DeleteFeatureFlagAction $delete): JsonResponse
     {
         $validatedName = $this->validateFeatureFlagName($name);
         $delete->execute($validatedName);
 
-        return response()->json(status: 204);
+        return response()->json([], 204);
     }
 
     /**
+     * Validate a flag name from a route parameter against the same rules used in body validation.
+     *
      * @throws ValidationException
      */
     private function validateFeatureFlagName(string $name): string
