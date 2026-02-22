@@ -81,16 +81,23 @@ Ne pas inventer d'autres categories.
 3. **Prefixer par le nom de l'agent** entre parentheses: `(claude)`, `(codex)`, `(copilot)`.
 4. **Ajouter le numero de PR** si disponible: `— #12`.
 5. **Etre specifique**: "Add shuffle function with seeded RNG to arrays module" et non "Update arrays".
+6. **Lister les endpoints API** crees ou modifies. Pour chaque endpoint, indiquer la methode HTTP et le path.
 
 ```markdown
 // Bon
 - Add seeded shuffle function to arrays module (`claude`) — #7
 - Fix palindrome check ignoring unicode characters (`codex`) — #9
+- Add infos domain API endpoints for stack diagnostics (`copilot`) — #19
+  - `GET /api/infos` — all stack info
+  - `GET /api/infos/laravel` — Laravel config
+  - `GET /api/infos/php` — PHP version and extensions
+  - `GET /api/infos/runtime` — app name, timestamps
 
 // Mauvais
 - Update code
 - Fix bug
 - Changes
+- Add API endpoints (sans lister lesquels)
 ```
 
 ## Workflow multi-agents

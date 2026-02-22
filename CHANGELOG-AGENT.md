@@ -6,7 +6,12 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add API endpoint listing requirement to changelog instructions (`claude`)
 - Add infos domain API endpoints for Laravel stack diagnostics (`copilot`) — #19
+  - `GET /api/infos` — all stack info (Laravel + PHP + runtime)
+  - `GET /api/infos/laravel` — Laravel version, environment, drivers
+  - `GET /api/infos/php` — PHP version, SAPI, extensions
+  - `GET /api/infos/runtime` — app name, timestamps, timezone
 - Add JavaScript conventions file with modules, functions, async, DOM, TypeScript sections (`claude`) — #18
 - Add error handling / diagnostic sections to stack-vite.md and stack-laravel.md (`claude`) — #18
 - Add pre-flight checklist and autonomous mode trigger phrase table in git.md (`claude`) — #17
