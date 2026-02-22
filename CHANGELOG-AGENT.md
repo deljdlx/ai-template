@@ -28,6 +28,14 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add pre-flight checklist and autonomous mode trigger phrase table in git.md (`claude`) — #17
 - Add placeholder verification step in setup.sh (`claude`) — #17
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
+
+### Changed
+- Redesign frontend homepage to explain stack purpose and architecture (`copilot`)
+  - Add introductory section highlighting key technologies (Vite, vanilla JS, responsive CSS)
+  - Document core features (client-side routing, component architecture, API integration, theme management, testing)
+  - Update page title to better reflect the playground's educational purpose
+  - Add `.home-intro` styled section with arrow-bullet list
+  - Replace "Useful ones" stat with "Possibilities" stat (∞)
 - Add cross-references between instruction files and migration conflict guidance (`claude`) — #15
 - Add interactive Laravel packages recipe: Sanctum, Passport, Spatie essentiels, extras (`claude`) — #12
 - Add Laravel coding instructions: DDD leger, Actions pattern, PHP robuste (`claude`) — #11

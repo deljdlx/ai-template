@@ -35,6 +35,21 @@ function esc(str) {
 
 function renderHome() {
   return `
+    <div class="home-intro">
+      <h2 class="home-intro__title">What is this?</h2>
+      <p class="home-intro__text">
+        This is a <strong>modern frontend stack playground</strong> built with <strong>Vite</strong>, <strong>vanilla JavaScript</strong>, and <strong>responsive CSS</strong>.
+        It demonstrates best practices for:
+      </p>
+      <ul class="home-intro__list">
+        <li><strong>Client-side routing</strong> — single-page navigation without framework overhead</li>
+        <li><strong>Component architecture</strong> — modular utilities with lazy-loaded demos</li>
+        <li><strong>API integration</strong> — seamless communication with a Laravel backend</li>
+        <li><strong>Theme management</strong> — persistent dark/light mode with localStorage</li>
+        <li><strong>Testing strategy</strong> — unit tests for pure functions and utilities</li>
+      </ul>
+    </div>
+
     <div class="home-grid">
       <a href="/math" data-router-link class="module-card">
         <span class="module-card__icon">&#x1D453;</span>
@@ -79,8 +94,8 @@ function renderHome() {
         <div class="stat__label">Tests</div>
       </div>
       <div class="stat">
-        <div class="stat__value">0</div>
-        <div class="stat__label">Useful ones</div>
+        <div class="stat__value">∞</div>
+        <div class="stat__label">Possibilities</div>
       </div>
     </div>
   `;
