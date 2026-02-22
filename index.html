@@ -279,6 +279,172 @@
       }
     }
 
+    /* ============ MINI TODO ============ */
+
+    .todo-panel {
+      margin-top: 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .todo-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 2px;
+      background: var(--cyan);
+      box-shadow: 0 0 16px var(--cyan-glow);
+    }
+
+    .todo-panel__head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.7rem;
+      gap: 0.75rem;
+    }
+
+    .todo-panel__title {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    .todo-panel__count {
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .todo-panel__form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .todo-panel__input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.45rem 0.55rem;
+      outline: none;
+    }
+
+    .todo-panel__input:focus {
+      border-color: var(--cyan);
+    }
+
+    .todo-panel__add {
+      background: transparent;
+      border: 1px solid rgba(0, 204, 255, 0.4);
+      color: var(--cyan);
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.75rem;
+      cursor: pointer;
+    }
+
+    .todo-panel__add:hover {
+      box-shadow: 0 0 12px var(--cyan-glow);
+    }
+
+    .todo-panel__list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 0.75rem;
+      max-height: 170px;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      padding: 0.35rem 0.45rem;
+      font-size: 0.77rem;
+    }
+
+    .todo-item__toggle {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+
+    .todo-item__text {
+      flex: 1;
+      text-align: left;
+      word-break: break-word;
+    }
+
+    .todo-item.done .todo-item__text {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+
+    .todo-item__remove {
+      background: transparent;
+      border: 1px solid rgba(255, 51, 68, 0.4);
+      color: var(--red);
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.35rem;
+      cursor: pointer;
+    }
+
+    .todo-item__remove:hover {
+      box-shadow: 0 0 10px var(--red-glow);
+    }
+
+    .todo-panel__empty {
+      border: 1px dashed var(--border);
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.45rem;
+      text-align: center;
+    }
+
+    .todo-panel__clear {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border-bright);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.5rem;
+      cursor: pointer;
+    }
+
+    .todo-panel__clear:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
     /* ============ STATIONS ============ */
 
     .stations {
@@ -640,6 +806,27 @@
         <span class="click-counter__btn-text">Click me</span>
       </button>
     </div>
+
+    <section class="todo-panel" aria-label="Mini todo list">
+      <div class="todo-panel__head">
+        <h2 class="todo-panel__title">todo queue</h2>
+        <span class="todo-panel__count" id="todoCount">0 open</span>
+      </div>
+      <form class="todo-panel__form" id="todoForm">
+        <input
+          class="todo-panel__input"
+          id="todoInput"
+          name="todo"
+          type="text"
+          maxlength="60"
+          placeholder="ajoute une tache..."
+          autocomplete="off"
+        />
+        <button class="todo-panel__add" type="submit">Add</button>
+      </form>
+      <ul class="todo-panel__list" id="todoList"></ul>
+      <button class="todo-panel__clear" id="todoClear" type="button">Clear done</button>
+    </section>
   </header>
 
   <!-- Stations -->
@@ -1058,6 +1245,97 @@
         clickBtn.classList.remove('clicked');
       }, 300);
     });
+
+    // ============ MINI TODO ============
+
+    const todoForm = document.getElementById('todoForm');
+    const todoInput = document.getElementById('todoInput');
+    const todoListEl = document.getElementById('todoList');
+    const todoCountEl = document.getElementById('todoCount');
+    const todoClearBtn = document.getElementById('todoClear');
+
+    let todoItems = [];
+    let todoNextId = 1;
+
+    function renderTodoList() {
+      const openCount = todoItems.filter((item) => !item.done).length;
+      todoCountEl.textContent = `${openCount} open`;
+
+      if (todoItems.length === 0) {
+        todoListEl.innerHTML = '<li class="todo-panel__empty">No tasks in queue</li>';
+        return;
+      }
+
+      todoListEl.innerHTML = todoItems
+        .map(
+          (item) => `
+            <li class="todo-item ${item.done ? 'done' : ''}" data-id="${item.id}">
+              <input class="todo-item__toggle" type="checkbox" ${item.done ? 'checked' : ''} aria-label="Toggle task" />
+              <span class="todo-item__text">${escapeHtml(item.text)}</span>
+              <button class="todo-item__remove" type="button">Del</button>
+            </li>
+          `,
+        )
+        .join('');
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    todoForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const text = todoInput.value.trim();
+      if (!text) return;
+
+      todoItems.push({
+        id: todoNextId++,
+        text,
+        done: false,
+      });
+
+      todoInput.value = '';
+      renderTodoList();
+    });
+
+    todoListEl.addEventListener('click', (event) => {
+      const row = event.target.closest('.todo-item');
+      if (!row) return;
+
+      const itemId = Number(row.dataset.id);
+      const removeBtn = event.target.closest('.todo-item__remove');
+
+      if (removeBtn) {
+        todoItems = todoItems.filter((item) => item.id !== itemId);
+        renderTodoList();
+      }
+    });
+
+    todoListEl.addEventListener('change', (event) => {
+      const toggle = event.target.closest('.todo-item__toggle');
+      if (!toggle) return;
+
+      const row = toggle.closest('.todo-item');
+      if (!row) return;
+
+      const itemId = Number(row.dataset.id);
+      todoItems = todoItems.map((item) =>
+        item.id === itemId ? { ...item, done: toggle.checked } : item,
+      );
+      renderTodoList();
+    });
+
+    todoClearBtn.addEventListener('click', () => {
+      todoItems = todoItems.filter((item) => !item.done);
+      renderTodoList();
+    });
+
+    renderTodoList();
   </script>
 
 </body>

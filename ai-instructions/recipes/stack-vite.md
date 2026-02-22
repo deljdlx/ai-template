@@ -1,12 +1,13 @@
 # Recipe: JavaScript / Vite
 
-Stack typique: Vite, ESLint, Prettier, Vitest (ou Jest), TypeScript optionnel.
+Stack typique: Vite, Sass/SCSS, ESLint, Prettier, Vitest (ou Jest), TypeScript optionnel.
 
 ## Stack & outils
 
 | Outil | Role | Commande |
 |-------|------|----------|
 | Vite | Build & dev server | `npm run build`, `npm run dev` |
+| Sass | Preprocesseur CSS (SCSS) | `npm install --save-dev sass` |
 | ESLint | Linting | `npx eslint src` |
 | Prettier | Formatting | `npx prettier --check src` |
 | Vitest | Tests unitaires / integration | `npx vitest run` |
@@ -42,6 +43,12 @@ npx tsc --noEmit
 npm install
 ```
 
+Sass est inclus comme dependance de dev. Vite le detecte automatiquement: aucun plugin supplementaire n'est requis. Il suffit d'importer un fichier `.scss` pour que la compilation soit active.
+
+```bash
+npm install --save-dev sass
+```
+
 Apres un `git checkout` ou un changement de branche, verifier si `package-lock.json` a change. Si oui, relancer `npm install`.
 
 ## Style de code
@@ -61,7 +68,11 @@ src/
 ├── components/          # Composants UI
 ├── core/                # Logique metier
 ├── utils/               # Helpers purs
-├── styles/              # CSS / SCSS
+├── styles/              # SCSS / CSS
+│   ├── _variables.scss  # Variables et tokens
+│   ├── _mixins.scss     # Mixins reutilisables
+│   ├── _base.scss       # Reset et styles de base
+│   └── main.scss        # Point d'entree SCSS (imports)
 └── assets/              # Images, fonts, etc.
 tests/
 ├── unit/                # Tests unitaires (pure logic)
@@ -87,6 +98,14 @@ Ne pas creer de nouveaux dossiers racine sans validation de l'utilisateur.
 2. Variables d'environnement: prefixer par `VITE_` pour les exposer au client.
 3. Imports statiques preferes aux `import()` dynamiques sauf pour le code-splitting intentionnel.
 4. Ne pas confondre `npm run dev` (dev server HMR) et `npm run build` (production).
+5. Sass est supporte nativement par Vite (zero config). Importer `.scss` directement dans le JS/HTML.
+
+## SCSS
+
+1. Vite compile le SCSS automatiquement si `sass` est installe (`devDependencies`). Pas de plugin requis.
+2. Point d'entree: `src/styles/main.scss`. Importer dans `main.js` ou dans le HTML.
+3. Partials: prefixer par `_` (ex: `_variables.scss`), importer sans underscore ni extension.
+4. Pour les regles detaillees CSS/SCSS (nommage, nesting, variables, structure), voir `ai-instructions/css-scss.md`.
 
 ## Prettier + ESLint
 
