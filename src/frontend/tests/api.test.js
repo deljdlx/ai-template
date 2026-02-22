@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from '../api.js';
+import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from '../api.js';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
@@ -14,6 +14,20 @@ function errorResponse(status, statusText) {
 
 beforeEach(() => {
   mockFetch.mockReset();
+});
+
+describe('API_CONFIG', () => {
+  it('should expose resolved base URL and endpoint map', () => {
+    expect(API_CONFIG.baseUrl).toBe('/api');
+    expect(API_CONFIG.envKey).toBe('VITE_API_BASE');
+    expect(API_CONFIG.endpoints).toEqual({
+      infos: '/infos',
+      laravel: '/infos/laravel',
+      php: '/infos/php',
+      runtime: '/infos/runtime',
+      packages: '/infos/packages',
+    });
+  });
 });
 
 describe('getInfos', () => {

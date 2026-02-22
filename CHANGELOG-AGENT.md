@@ -43,6 +43,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Display frontend API client configuration on the `/api` page (base URL, env override, and resolved endpoints) (`codex`)
 - Integrate API tabs into router with proper URL routing (`copilot`)
   - Add `/api/:tab` route to handle sub-tabs (combined, framework, php, runtime, packages)
   - Replace tab buttons with router links for proper navigation
