@@ -35,6 +35,10 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Professionalize homepage copy to replace "playground/sandbox" tone with production-oriented messaging (`codex`)
+  - Rename brand/title to "Frontend Engineering Hub"
+  - Reframe home intro around architecture, quality, and backend contract validation
+  - Replace ambiguous "Possibilities" stat with concrete "API endpoints" metric
 - Redesign frontend homepage to explain stack purpose and architecture (`copilot`)
   - Add introductory section highlighting key technologies (Vite, vanilla JS, responsive CSS)
   - Document core features (client-side routing, component architecture, API integration, theme management, testing)

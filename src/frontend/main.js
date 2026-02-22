@@ -36,17 +36,17 @@ function esc(str) {
 function renderHome() {
   return `
     <div class="home-intro">
-      <h2 class="home-intro__title">What is this?</h2>
+      <h2 class="home-intro__title">Platform Overview</h2>
       <p class="home-intro__text">
-        This is a <strong>modern frontend stack playground</strong> built with <strong>Vite</strong>, <strong>vanilla JavaScript</strong>, and <strong>responsive CSS</strong>.
-        It demonstrates best practices for:
+        This frontend is a <strong>production-ready reference surface</strong> built with <strong>Vite</strong>, <strong>vanilla JavaScript</strong>, and <strong>modular SCSS</strong>.
+        It is designed to validate architecture decisions, implementation quality, and backend integration:
       </p>
       <ul class="home-intro__list">
-        <li><strong>Client-side routing</strong> — single-page navigation without framework overhead</li>
-        <li><strong>Component architecture</strong> — modular utilities with lazy-loaded demos</li>
-        <li><strong>API integration</strong> — seamless communication with a Laravel backend</li>
-        <li><strong>Theme management</strong> — persistent dark/light mode with localStorage</li>
-        <li><strong>Testing strategy</strong> — unit tests for pure functions and utilities</li>
+        <li><strong>Routing and navigation</strong> - client-side transitions with explicit route ownership</li>
+        <li><strong>Business utility modules</strong> - isolated math, string, and array capabilities</li>
+        <li><strong>Backend contract checks</strong> - live calls against Laravel diagnostic endpoints</li>
+        <li><strong>UI consistency controls</strong> - persistent themes and shared design tokens</li>
+        <li><strong>Quality baseline</strong> - testable functions with clear input/output behavior</li>
       </ul>
     </div>
 
@@ -87,15 +87,15 @@ function renderHome() {
     <div class="home-stats">
       <div class="stat">
         <div class="stat__value">12</div>
-        <div class="stat__label">Functions</div>
+        <div class="stat__label">Utility functions</div>
       </div>
       <div class="stat">
         <div class="stat__value">37</div>
-        <div class="stat__label">Tests</div>
+        <div class="stat__label">Automated tests</div>
       </div>
       <div class="stat">
-        <div class="stat__value">∞</div>
-        <div class="stat__label">Possibilities</div>
+        <div class="stat__value">5</div>
+        <div class="stat__label">API endpoints</div>
       </div>
     </div>
   `;
