@@ -15,6 +15,13 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Fix CI check step: allow skipping when no CI is configured or network is unavailable (`claude`)
 
 ### Added
+- Add testing conventions file `ai-instructions/testing.md` (`claude`)
+  - Unified testing philosophy aligned with project principles (determinism, observability, YAGNI)
+  - Pest conventions: unit vs feature boundaries, Action test patterns, `describe`/`expect` syntax
+  - Vitest conventions: mocking IO, `describe` per module, `stubGlobal` for fetch
+  - File organization: `tests/Unit/Domain/` mirroring `app/Domain/`, feature tests by endpoint
+  - Anti-patterns table (8 common pitfalls with alternatives)
+  - Command reference for both stacks
 - Add comprehensive backend unit tests for all domain Actions (`claude`)
   - Infos domain: `GetLaravelInfoAction` (5), `GetPhpInfoAction` (5), `GetRuntimeInfoAction` (5), `GetPackagesAction` (6)
   - Auth domain: `RegisterUserAction` (4), `LoginUserAction` (5)

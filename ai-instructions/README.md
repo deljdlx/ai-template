@@ -15,12 +15,13 @@ Un agent qui demarre une session doit lire dans cet ordre:
 | 4 | `css-scss.md` | Conventions CSS/SCSS (nommage, nesting, variables, responsive) |
 | 5 | `javascript-conventions.md` | Conventions JS/TS (modules, fonctions, async, DOM, TypeScript) — si stack JS |
 | 6 | `laravel-coding.md` | Architecture Laravel (DDD leger, Actions, Models, PHP robuste) — si stack Laravel |
-| 7 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
-| 8 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
-| 9 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
-| 10 | `recipes/multi-stack-integration.md` | Integration Vite + Laravel (proxy, CORS, API client, workflow) — si les deux stacks sont presentes |
+| 7 | `testing.md` | Conventions de test (Pest + Vitest, unit vs feature, patterns, anti-patterns) — si tests present |
+| 8 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
+| 9 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
+| 10 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
+| 11 | `recipes/multi-stack-integration.md` | Integration Vite + Laravel (proxy, CORS, API client, workflow) — si les deux stacks sont presentes |
 
-Les items 1-4 sont **obligatoires**. Les items 5-10 sont **conditionnels** selon la stack du projet (JS et/ou Laravel).
+Les items 1-4 sont **obligatoires**. Les items 5-11 sont **conditionnels** selon la stack du projet (JS et/ou Laravel).
 
 ## Architecture du template
 
@@ -40,6 +41,7 @@ ai-instructions/
 ├── css-scss.md                   ← conventions CSS/SCSS
 ├── javascript-conventions.md     ← conventions JS/TS (modules, async, DOM, TypeScript)
 ├── laravel-coding.md             ← architecture Laravel (DDD leger, Actions, PHP robuste)
+├── testing.md                    ← conventions de test (Pest + Vitest, patterns, anti-patterns)
 └── recipes/
     ├── stack-vite.md             ← recipe JS/Vite
     ├── stack-laravel.md          ← recipe Laravel 12/SQLite
