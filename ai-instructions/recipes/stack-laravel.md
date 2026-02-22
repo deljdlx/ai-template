@@ -12,7 +12,7 @@ Stack typique: Laravel 12, SQLite, Pest, Pint, Larastan, IDE Helper, Boost (MCP)
 | Pint | Code style (PHP CS Fixer) | `./vendor/bin/pint` |
 | Larastan | Analyse statique | `./vendor/bin/phpstan analyse` |
 | IDE Helper | PHPDoc pour models/facades | `php artisan ide-helper:generate` |
-| Boost | MCP server pour agents AI | `php artisan boost:install` |
+| Boost | Guidelines, skills & MCP server pour AI | `php artisan boost:install` |
 | Debugbar | Debug toolbar navigateur | auto (APP_DEBUG=true) |
 
 ## Installation from scratch
@@ -111,10 +111,43 @@ _ide_helper_models.php
 php artisan boost:install
 ```
 
-Boost expose un serveur MCP que les agents AI (Claude, Codex, Copilot) peuvent utiliser pour:
-- Introspecter l'application (versions, config, routes, schema DB)
-- Executer des requetes SQL en lecture seule
-- Acceder a la documentation Laravel contextuelle (filtree par versions installees)
+`boost:install` genere automatiquement:
+- Les **guidelines** (fichiers d'instructions) adaptes aux packages detectes dans `composer.json`
+- Les **skills** (modules de connaissance on-demand) pour Pest, Livewire, etc.
+- La configuration **MCP** (`.mcp.json`) pour connecter les agents au serveur
+- Un fichier `boost.json` de configuration
+
+Les fichiers generes par Boost peuvent etre ajoutes au `.gitignore` — ils se regenerent via `boost:install` ou `boost:update`.
+
+#### Connexion MCP par agent
+
+```bash
+# Claude Code
+claude mcp add -s local -t stdio laravel-boost php artisan boost:mcp
+
+# Codex
+codex mcp add laravel-boost -- php "artisan" "boost:mcp"
+```
+
+Pour Cursor, Copilot, Gemini CLI : ouvrir les MCP Settings et activer `laravel-boost`.
+
+#### Maintenir Boost a jour
+
+```bash
+php artisan boost:update
+```
+
+Ou automatiquement via `composer.json`:
+
+```json
+{
+  "scripts": {
+    "post-update-cmd": [
+      "@php artisan boost:update --ansi"
+    ]
+  }
+}
+```
 
 ## Commandes de verification
 
@@ -273,13 +306,37 @@ Lancer:
 
 ## Boost — Usage avec les agents AI
 
-Boost est un serveur MCP (Model Context Protocol). Une fois installe:
+Boost v2 fournit trois mecanismes pour les agents AI:
 
-1. **Introspection**: l'agent peut decouvrir les routes, le schema DB, les packages installes, la config.
-2. **Documentation contextuelle**: Boost sert la doc Laravel/Livewire/Inertia filtree par les versions exactes du `composer.json`.
-3. **Requetes SQL read-only**: l'agent peut explorer les donnees sans risque de modification.
+### 1. Guidelines (chargees upfront)
 
-Configurer l'agent pour se connecter au MCP server Boost selon sa documentation specifique.
+Instructions chargeess au demarrage de chaque session. Boost detecte les packages dans `composer.json` et genere les guidelines correspondantes (Laravel core, Pest, Pint, Livewire, Inertia, Tailwind, etc.).
+
+Pour ajouter des guidelines custom: creer des fichiers `.md` ou `.blade.php` dans `.ai/guidelines/`.
+
+### 2. Skills (on-demand)
+
+Modules de connaissance actives a la demande quand l'agent en a besoin. Exemple: `pest-testing`, `livewire-development`, `tailwindcss-development`.
+
+Pour ajouter des skills custom: creer `.ai/skills/{skill-name}/SKILL.md`.
+
+### 3. MCP Server (15+ outils)
+
+Serveur MCP exposant des outils d'introspection et d'interaction:
+
+| Outil | Role |
+|-------|------|
+| Application Info | Versions PHP/Laravel, packages, models Eloquent |
+| Database Schema | Schema de la base de donnees |
+| Database Query | Requetes SQL (read-only) |
+| List Routes | Routes de l'application |
+| Search Docs | Recherche semantique dans 17 000+ docs Laravel |
+| Tinker | Execution de code dans le contexte de l'app |
+| Get Config | Valeurs de configuration (dot notation) |
+| Last Error | Derniere erreur dans les logs |
+| Browser Logs | Logs et erreurs du navigateur |
+
+Reference complete: https://laravel.com/docs/12.x/boost
 
 ## Anti-patterns
 
