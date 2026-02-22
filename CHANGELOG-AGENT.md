@@ -5,6 +5,10 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Fixed
+- Fix autonomous bootstrap: add `git clean -fd` to handle leftover untracked files blocking checkout (`claude`)
+- Fix CI check step: allow skipping when no CI is configured or network is unavailable (`claude`)
+
 ### Added
 - Add packages listing endpoint with full-stack integration (`claude`)
   - `GET /api/infos/packages` — lists installed Composer packages (name, constraint, version, dev flag)
