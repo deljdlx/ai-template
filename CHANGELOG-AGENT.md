@@ -53,6 +53,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Group frontend utility demos under a single `Tests` section with Math/Strings/Arrays sub-tabs (`codex`)
 - Migrate frontend routing to hash-based URLs (`/#/...`) and update all navigation links accordingly (`codex`)
 - Display frontend API client configuration on the `/api` page (base URL, env override, and resolved endpoints) (`codex`)
 - Integrate API tabs into router with proper URL routing (`copilot`)

@@ -23,8 +23,10 @@ function setActiveLink(path) {
     const href = link.getAttribute('href') || '/';
     const hashIndex = href.indexOf('#');
     const linkPath = normalizePath(hashIndex >= 0 ? href.slice(hashIndex + 1) : href);
-    // Match /api for both /api and /api/:tab routes
-    const isActive = linkPath === path || (linkPath === '/api' && path.startsWith('/api'));
+    // Match grouped sections for nested routes.
+    const isApiRoute = linkPath === '/api' && path.startsWith('/api');
+    const isTestsRoute = linkPath === '/tests' && path.startsWith('/tests');
+    const isActive = linkPath === path || isApiRoute || isTestsRoute;
     link.setAttribute('aria-current', isActive ? 'page' : 'false');
   }
 }
@@ -59,28 +61,12 @@ function renderHome() {
     </div>
 
     <div class="home-grid">
-      <a href="${routeHref('/math')}" data-router-link class="module-card">
+      <a href="${routeHref('/tests')}" data-router-link class="module-card">
         <span class="module-card__icon">&#x1D453;</span>
-        <div class="module-card__name">Math</div>
-        <div class="module-card__count">4 functions</div>
+        <div class="module-card__name">Tests</div>
+        <div class="module-card__count">3 suites • 12 functions</div>
         <div class="module-card__fn">
-          <code>add</code> <code>multiply</code> <code>fibonacci</code> <code>isEven</code>
-        </div>
-      </a>
-      <a href="${routeHref('/strings')}" data-router-link class="module-card">
-        <span class="module-card__icon">&ldquo;ab&rdquo;</span>
-        <div class="module-card__name">Strings</div>
-        <div class="module-card__count">4 functions</div>
-        <div class="module-card__fn">
-          <code>reverse</code> <code>isPalindrome</code> <code>charFrequency</code> <code>spongebobCase</code>
-        </div>
-      </a>
-      <a href="${routeHref('/arrays')}" data-router-link class="module-card">
-        <span class="module-card__icon">[&thinsp;]</span>
-        <div class="module-card__name">Arrays</div>
-        <div class="module-card__count">4 functions</div>
-        <div class="module-card__fn">
-          <code>shuffle</code> <code>flatten</code> <code>unique</code> <code>groupBy</code>
+          <code>math</code> <code>strings</code> <code>arrays</code>
         </div>
       </a>
       <a href="${routeHref('/api')}" data-router-link class="module-card">
@@ -126,11 +112,19 @@ function demoBlock(name, sig, inputsHtml, resultId) {
 }
 
 function renderMath() {
-  return `
-    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
-    <h2 class="page-title">Math</h2>
-    <p class="page-desc">Technically correct. Profoundly unnecessary.</p>
+  return renderTests({ suite: 'math' });
+}
 
+function renderStrings() {
+  return renderTests({ suite: 'strings' });
+}
+
+function renderArrays() {
+  return renderTests({ suite: 'arrays' });
+}
+
+function renderMathDemos() {
+  return `
     ${demoBlock('add', '(a, b) => number', `
       <input class="demo-input" data-input="add-a" placeholder="a" value="7" />
       <input class="demo-input" data-input="add-b" placeholder="b" value="35" />
@@ -151,12 +145,8 @@ function renderMath() {
   `;
 }
 
-function renderStrings() {
+function renderStringsDemos() {
   return `
-    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
-    <h2 class="page-title">Strings</h2>
-    <p class="page-desc">Over-engineered solutions to problems nobody has.</p>
-
     ${demoBlock('reverse', '(str) => string', `
       <input class="demo-input u-flex-1" data-input="rev-str" placeholder="text" value="useless machine" />
     `, 'reverse')}
@@ -175,12 +165,8 @@ function renderStrings() {
   `;
 }
 
-function renderArrays() {
+function renderArraysDemos() {
   return `
-    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
-    <h2 class="page-title">Arrays</h2>
-    <p class="page-desc">Reinventing wheels, one function at a time.</p>
-
     ${demoBlock('shuffle', '(arr, seed?) => array  [Fisher-Yates]', `
       <input class="demo-input u-flex-1" data-input="shuf-arr" placeholder="array" value="[1,2,3,4,5,6,7,8]" />
       <input class="demo-input demo-input--narrow" data-input="shuf-seed" placeholder="seed" value="42" />
@@ -197,6 +183,31 @@ function renderArrays() {
     ${demoBlock('groupBy', '(arr, keyFn) => {key: items}', `
       <input class="demo-input u-flex-1" data-input="group-arr" placeholder="items (JSON)" value='[{"t":"a","v":1},{"t":"b","v":2},{"t":"a","v":3}]' />
     `, 'groupBy')}
+  `;
+}
+
+function renderTests({ suite = 'math' } = {}) {
+  const suites = ['math', 'strings', 'arrays'];
+  const activeSuite = suites.includes(suite) ? suite : 'math';
+  const activeLabel = activeSuite.charAt(0).toUpperCase() + activeSuite.slice(1);
+  const contentBySuite = {
+    math: renderMathDemos(),
+    strings: renderStringsDemos(),
+    arrays: renderArraysDemos(),
+  };
+
+  return `
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
+    <h2 class="page-title">Tests</h2>
+    <p class="page-desc">Utility test playground (${activeLabel})</p>
+
+    <nav class="api-tabs" data-tests-tabs>
+      <a href="${routeHref('/tests/math')}" data-router-link class="api-tabs__tab" data-active="${activeSuite === 'math'}">Math</a>
+      <a href="${routeHref('/tests/strings')}" data-router-link class="api-tabs__tab" data-active="${activeSuite === 'strings'}">Strings</a>
+      <a href="${routeHref('/tests/arrays')}" data-router-link class="api-tabs__tab" data-active="${activeSuite === 'arrays'}">Arrays</a>
+    </nav>
+
+    ${contentBySuite[activeSuite]}
   `;
 }
 
@@ -488,6 +499,8 @@ const router = createRouter({
   root: app,
   routes: [
     { path: '/', render: renderHome },
+    { path: '/tests/:suite', render: ({ params }) => renderTests({ suite: params.suite }) },
+    { path: '/tests', render: () => renderTests() },
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
