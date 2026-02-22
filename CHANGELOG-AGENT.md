@@ -15,6 +15,15 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Fix CI check step: allow skipping when no CI is configured or network is unavailable (`claude`)
 
 ### Added
+- Add Laravel Pennant feature flags management across frontend and backend (`codex`)
+  - `GET /api/feature-flags` - list global feature flags with enabled state
+  - `POST /api/feature-flags` - create or update a global feature flag
+  - `PUT /api/feature-flags/{name}` - toggle an existing global feature flag
+  - `DELETE /api/feature-flags/{name}` - delete a global feature flag
+  - Frontend: add `/feature-flags` page with create/toggle/delete actions
+  - Frontend API client: add feature flag endpoints and helpers
+  - Backend: add FeatureFlagController and DDD-lite actions for list/upsert/delete
+  - Tests: add frontend API unit tests and backend feature tests
 - Add authentication endpoints with Laravel Sanctum (`claude`)
   - `POST /api/auth/register` — create account, return user + API token
   - `POST /api/auth/login` — authenticate, return user + API token

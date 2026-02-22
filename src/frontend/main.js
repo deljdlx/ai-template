@@ -4,7 +4,20 @@ import { createRouter, normalizePath, toHashHref } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
-import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages, registerUser, loginUser } from './api.js';
+import {
+  API_CONFIG,
+  getInfos,
+  getLaravelInfo,
+  getPhpInfo,
+  getRuntimeInfo,
+  getPackages,
+  registerUser,
+  loginUser,
+  getFeatureFlags,
+  createFeatureFlag,
+  updateFeatureFlag,
+  deleteFeatureFlag,
+} from './api.js';
 
 initTheme();
 
@@ -26,7 +39,8 @@ function setActiveLink(path) {
     // Match grouped sections for nested routes.
     const isApiRoute = linkPath === '/api' && path.startsWith('/api');
     const isTestsRoute = linkPath === '/tests' && path.startsWith('/tests');
-    const isActive = linkPath === path || isApiRoute || isTestsRoute;
+    const isFlagsRoute = linkPath === '/feature-flags' && path.startsWith('/feature-flags');
+    const isActive = linkPath === path || isApiRoute || isTestsRoute || isFlagsRoute;
     link.setAttribute('aria-current', isActive ? 'page' : 'false');
   }
 }
@@ -75,6 +89,14 @@ function renderHome() {
         <div class="module-card__count">5 endpoints</div>
         <div class="module-card__fn">
           <code>infos</code> <code>laravel</code> <code>php</code> <code>runtime</code> <code>packages</code>
+        </div>
+      </a>
+      <a href="${routeHref('/feature-flags')}" data-router-link class="module-card">
+        <span class="module-card__icon">&#x2691;</span>
+        <div class="module-card__name">Feature Flags</div>
+        <div class="module-card__count">Pennant • Global Scope</div>
+        <div class="module-card__fn">
+          <code>create</code> <code>toggle</code> <code>delete</code>
         </div>
       </a>
     </div>
@@ -249,6 +271,7 @@ function renderApiConfig() {
         <li><code>php</code> → <code>${esc(`${baseUrl}${endpoints.php}`)}</code></li>
         <li><code>runtime</code> → <code>${esc(`${baseUrl}${endpoints.runtime}`)}</code></li>
         <li><code>packages</code> → <code>${esc(`${baseUrl}${endpoints.packages}`)}</code></li>
+        <li><code>featureFlags</code> → <code>${esc(`${baseUrl}${endpoints.featureFlags}`)}</code></li>
       </ul>
     </section>
   `;
@@ -388,6 +411,135 @@ async function handleAuth(action) {
   }
 }
 
+function renderFeatureFlags() {
+  return `
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
+    <h2 class="page-title">Feature Flags</h2>
+    <p class="page-desc">Create and manage Laravel Pennant flags (global scope).</p>
+    <p class="flags-note">
+      TODO: protect this page and API routes with auth/permissions before production use.
+    </p>
+
+    <div class="flags-form">
+      <input class="demo-input u-flex-1" data-input="flag-name" type="text" placeholder="flag name (e.g. checkout.v2)" />
+      <select class="demo-input demo-input--narrow" data-input="flag-enabled">
+        <option value="true" selected>enabled</option>
+        <option value="false">disabled</option>
+      </select>
+      <button class="btn btn--primary" data-flag-action="create">Create</button>
+    </div>
+
+    <div class="flags-feedback flags-feedback--empty" data-flags-feedback>no operation yet</div>
+    <div class="flags-list" data-flags-list>
+      <div class="api-result api-result--empty">loading feature flags&hellip;</div>
+    </div>
+  `;
+}
+
+function renderFeatureFlagsList(items) {
+  if (!items.length) {
+    return '<div class="api-result api-result--empty">no feature flags yet</div>';
+  }
+
+  return items
+    .map((item) => `
+      <div class="flags-item">
+        <div class="flags-item__meta">
+          <code class="flags-item__name">${esc(item.name)}</code>
+          <span class="flags-item__state" data-enabled="${item.enabled}">
+            ${item.enabled ? 'enabled' : 'disabled'}
+          </span>
+        </div>
+        <div class="flags-item__actions">
+          <button class="btn" data-flag-action="toggle" data-flag-name="${esc(item.name)}" data-flag-enabled="${item.enabled}">
+            ${item.enabled ? 'Disable' : 'Enable'}
+          </button>
+          <button class="btn" data-flag-action="delete" data-flag-name="${esc(item.name)}">Delete</button>
+        </div>
+      </div>
+    `)
+    .join('');
+}
+
+function setFeatureFlagsFeedback(message, type = 'neutral') {
+  const el = app.querySelector('[data-flags-feedback]');
+  if (!el) {
+    return;
+  }
+
+  el.className = `flags-feedback flags-feedback--${type}`;
+  el.textContent = message;
+}
+
+async function refreshFeatureFlagsList() {
+  const listEl = app.querySelector('[data-flags-list]');
+  if (!listEl) {
+    return;
+  }
+
+  listEl.innerHTML = '<div class="api-result api-result--empty">loading feature flags&hellip;</div>';
+
+  try {
+    const payload = await getFeatureFlags();
+    listEl.innerHTML = renderFeatureFlagsList(payload.items || []);
+  } catch (err) {
+    listEl.innerHTML = `<div class="api-result"><span class="api-result__error">${esc(err.message)}</span></div>`;
+  }
+}
+
+async function handleFeatureFlagAction(action, button) {
+  if (action === 'create') {
+    const name = val('flag-name').trim();
+    const enabled = val('flag-enabled') === 'true';
+
+    if (!name) {
+      setFeatureFlagsFeedback('name is required', 'error');
+      return;
+    }
+
+    try {
+      const result = await createFeatureFlag({ name, enabled });
+      setFeatureFlagsFeedback(`saved ${result.name} (${result.enabled ? 'enabled' : 'disabled'})`, 'success');
+      await refreshFeatureFlagsList();
+      const nameInput = app.querySelector('[data-input="flag-name"]');
+      if (nameInput) {
+        nameInput.value = '';
+      }
+    } catch (err) {
+      setFeatureFlagsFeedback(err.message, 'error');
+    }
+
+    return;
+  }
+
+  const name = button.dataset.flagName;
+  if (!name) {
+    return;
+  }
+
+  if (action === 'toggle') {
+    const currentEnabled = button.dataset.flagEnabled === 'true';
+    try {
+      const result = await updateFeatureFlag(name, !currentEnabled);
+      setFeatureFlagsFeedback(`updated ${result.name} (${result.enabled ? 'enabled' : 'disabled'})`, 'success');
+      await refreshFeatureFlagsList();
+    } catch (err) {
+      setFeatureFlagsFeedback(err.message, 'error');
+    }
+    return;
+  }
+
+  if (action === 'delete') {
+    try {
+      await deleteFeatureFlag(name);
+      setFeatureFlagsFeedback(`deleted ${name}`, 'success');
+      await refreshFeatureFlagsList();
+    } catch (err) {
+      setFeatureFlagsFeedback(err.message, 'error');
+    }
+  }
+}
+
 /* ─── API HANDLERS ─── */
 
 const API_HANDLERS = {
@@ -504,6 +656,7 @@ const router = createRouter({
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
+    { path: '/feature-flags', render: renderFeatureFlags },
     { path: '/register', render: renderRegister },
     { path: '/login', render: renderLogin },
     { path: '/api/:tab', render: ({ params }) => renderApi({ tab: params.tab }) },
@@ -521,6 +674,10 @@ const router = createRouter({
     app.style.animation = 'none';
     app.offsetHeight;
     app.style.animation = '';
+
+    if (path.startsWith('/feature-flags')) {
+      void refreshFeatureFlagsList();
+    }
   },
 });
 
@@ -529,6 +686,12 @@ router.start();
 /* ─── DELEGATED CLICK HANDLERS ─── */
 
 app.addEventListener('click', (event) => {
+  const flagActionBtn = event.target.closest('[data-flag-action]');
+  if (flagActionBtn) {
+    void handleFeatureFlagAction(flagActionBtn.dataset.flagAction, flagActionBtn);
+    return;
+  }
+
   const runBtn = event.target.closest('[data-run]');
   if (runBtn) {
     handleRun(runBtn.dataset.run);
