@@ -8,7 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->prefix('infos')->group(function (): void {
+Route::prefix('infos')->group(function (): void {
     Route::get('/', [InfosController::class, 'index'])->name('infos.index');
     Route::get('/laravel', [InfosController::class, 'laravel'])->name('infos.laravel');
     Route::get('/php', [InfosController::class, 'php'])->name('infos.php');
