@@ -340,6 +340,41 @@ Serveur MCP exposant des outils d'introspection et d'interaction:
 
 Reference complete: https://laravel.com/docs/12.x/boost
 
+## Diagnostic d'erreurs courantes
+
+### `php artisan test` echoue
+
+1. Lire le message d'erreur — Pest affiche le fichier, la ligne, et l'assertion echouee.
+2. Lancer le test specifique: `php artisan test --filter=NomDuTest`.
+3. Si erreur de base de donnees: verifier que les migrations sont a jour (`php artisan migrate:fresh --env=testing`).
+4. Si erreur "class not found": lancer `composer dump-autoload`.
+
+### `./vendor/bin/pint --test` echoue
+
+1. Lancer `./vendor/bin/pint` (sans `--test`) pour corriger automatiquement.
+2. Re-lancer `./vendor/bin/pint --test` pour verifier que tout est corrige.
+3. Si Pint modifie un fichier genere (migration, stub): l'accepter, Pint a raison.
+
+### `./vendor/bin/phpstan analyse` echoue
+
+1. Lire les erreurs: PHPStan affiche le fichier, la ligne, et le type d'erreur.
+2. Si erreur sur un model Eloquent (propriete inconnue): relancer `php artisan ide-helper:models -N`.
+3. Si erreur sur une facade: relancer `php artisan ide-helper:generate`.
+4. Si erreur de niveau trop strict: verifier `phpstan.neon` — commencer au level 5.
+5. Ne pas ignorer avec `@phpstan-ignore` sans justification en commentaire.
+
+### `php artisan migrate` echoue
+
+1. Si erreur SQLite "table already exists": lancer `php artisan migrate:fresh` (dev uniquement).
+2. Si erreur de foreign key: verifier l'ordre des migrations (la table referencee doit exister avant).
+3. Si erreur apres pull/rebase: un autre agent a peut-etre ajoute des migrations — lancer `php artisan migrate`.
+
+### `composer install` echoue
+
+1. Si conflit de versions: `composer update` pour recalculer les dependances.
+2. Si extension PHP manquante: `php -m` pour lister les extensions installees.
+3. Si erreur memoire: `COMPOSER_MEMORY_LIMIT=-1 composer install`.
+
 ## Anti-patterns
 
 1. **Logique metier dans les controllers**: extraire dans des Actions (prefere) ou directement sur le Model. Voir `ai-instructions/laravel-coding.md` pour le pattern Actions.

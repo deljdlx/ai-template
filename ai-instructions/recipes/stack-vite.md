@@ -53,6 +53,9 @@ Apres un `git checkout` ou un changement de branche, verifier si `package-lock.j
 
 ## Style de code
 
+Voir `ai-instructions/javascript-conventions.md` pour les conventions JS detaillees (modules, fonctions, async, DOM, TypeScript).
+
+Resume rapide:
 1. ESM seulement (`import` / `export`), pas de CommonJS.
 2. Preferer `const`, puis `let`. Jamais `var`.
 3. Fonctions courtes et monotaches. Cible: <= 40 lignes par methode.
@@ -138,6 +141,34 @@ Ne pas creer de nouveaux dossiers racine sans validation de l'utilisateur.
 1. Si les deux sont presents, Prettier gere le formatting, ESLint gere les regles logiques.
 2. Ne pas ajouter de regles de formatting dans ESLint si Prettier est configure.
 3. Respecter la config existante (`.eslintrc.*`, `.prettierrc`, `eslint.config.js`). Ne pas la modifier sans validation.
+
+## Diagnostic d'erreurs courantes
+
+### `npm run build` echoue
+
+1. Lire le message d'erreur complet — souvent un import manquant ou une syntaxe invalide.
+2. Si erreur SCSS: verifier que `sass` est dans `devDependencies` (`npm install --save-dev sass`).
+3. Si erreur TypeScript: lancer `npx tsc --noEmit` pour des messages plus detailles.
+4. Si `out of memory`: augmenter la limite Node (`NODE_OPTIONS=--max_old_space_size=4096 npm run build`).
+
+### ESLint bloque
+
+1. Lire les erreurs: `npx eslint src --format=compact` pour une vue condensee.
+2. Si erreurs de formatting ET Prettier est present: lancer `npx prettier --write src` d'abord, puis re-lancer ESLint.
+3. Si une regle semble fausse: ne pas desactiver globalement. Utiliser `// eslint-disable-next-line RULE_NAME` avec justification.
+
+### Tests echouent
+
+1. Lancer le test specifique: `npx vitest run --reporter=verbose NOM_DU_FICHIER`.
+2. Si erreur d'import/module: verifier que les mocks sont correctement configures.
+3. Si erreur de timeout: le test fait probablement un vrai appel reseau — mocker le `fetch`.
+4. Si test intermittent (flaky): chercher une dependance a l'ordre d'execution ou a l'horloge.
+
+### `npm install` echoue
+
+1. Supprimer `node_modules/` et `package-lock.json`, relancer `npm install`.
+2. Si conflit de peer dependencies: `npm install --legacy-peer-deps` en dernier recours.
+3. Verifier la version de Node: `node --version` (minimum selon `engines` dans `package.json`).
 
 ## Anti-patterns
 

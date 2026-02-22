@@ -13,12 +13,13 @@ Un agent qui demarre une session doit lire dans cet ordre:
 | 2 | `git.md` | Regles git, branches, worktrees, mode autonome, publication, multi-agents |
 | 3 | `changelog.md` | Format et regles de tenue du changelog |
 | 4 | `css-scss.md` | Conventions CSS/SCSS (nommage, nesting, variables, responsive) |
-| 5 | `laravel-coding.md` | Architecture Laravel (DDD leger, Actions, Models, PHP robuste) — si stack Laravel |
-| 6 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
-| 7 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
-| 8 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
+| 5 | `javascript-conventions.md` | Conventions JS/TS (modules, fonctions, async, DOM, TypeScript) — si stack JS |
+| 6 | `laravel-coding.md` | Architecture Laravel (DDD leger, Actions, Models, PHP robuste) — si stack Laravel |
+| 7 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
+| 8 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
+| 9 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
 
-Les items 1-4 sont **obligatoires**. Les items 5-8 sont **conditionnels**: ne lire que si le projet utilise la stack Laravel.
+Les items 1-4 sont **obligatoires**. Les items 5-9 sont **conditionnels** selon la stack du projet (JS et/ou Laravel).
 
 ## Architecture du template
 
@@ -36,6 +37,7 @@ ai-instructions/
 ├── git.md                        ← regles git multi-agents
 ├── changelog.md                  ← format changelog
 ├── css-scss.md                   ← conventions CSS/SCSS
+├── javascript-conventions.md     ← conventions JS/TS (modules, async, DOM, TypeScript)
 ├── laravel-coding.md             ← architecture Laravel (DDD leger, Actions, PHP robuste)
 └── recipes/
     ├── stack-vite.md             ← recipe JS/Vite
