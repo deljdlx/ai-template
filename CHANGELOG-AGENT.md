@@ -6,6 +6,10 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- Fix API tab content not updating when clicking sub-tabs (`copilot`)
+  - Reorder routes: place `/api/:tab` before `/api` for proper parameter matching
+  - Router now correctly matches parameterized routes before static ones
+  - Fixes issue where URL changed but content remained on default 'combined' tab
 - Fix autonomous bootstrap: add `git clean -fd` to handle leftover untracked files blocking checkout (`claude`)
 - Fix CI check step: allow skipping when no CI is configured or network is unavailable (`claude`)
 
