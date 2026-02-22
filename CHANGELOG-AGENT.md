@@ -15,6 +15,12 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Fix CI check step: allow skipping when no CI is configured or network is unavailable (`claude`)
 
 ### Added
+- Add comprehensive backend unit tests for all domain Actions (`claude`)
+  - Infos domain: `GetLaravelInfoAction` (5), `GetPhpInfoAction` (5), `GetRuntimeInfoAction` (5), `GetPackagesAction` (6)
+  - Auth domain: `RegisterUserAction` (4), `LoginUserAction` (5)
+  - FeatureFlags domain: `GetFeatureFlagsAction` (4), `UpsertFeatureFlagAction` (5), `DeleteFeatureFlagAction` (3)
+  - Feature tests for missing Infos endpoints: `GET /api/infos`, `/api/infos/laravel`, `/api/infos/php`, `/api/infos/runtime` (7)
+  - Total: 49 new tests, bringing backend from 16 to 65 tests (320 assertions)
 - Add Laravel Pennant feature flags management across frontend and backend (`codex`)
   - `GET /api/feature-flags` - list global feature flags with enabled state
   - `POST /api/feature-flags` - create or update a global feature flag
