@@ -36,6 +36,10 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
   - Update page title to better reflect the playground's educational purpose
   - Add `.home-intro` styled section with arrow-bullet list
   - Replace "Useful ones" stat with "Possibilities" stat (∞)
+- Rename site from "The Useless Machine" to "Frontend Stack Playground" (`copilot`)
+  - Update page title (HTML meta)
+  - Update main heading and subtitle 
+  - Better aligned with educational purpose and modern stack focus
 - Add cross-references between instruction files and migration conflict guidance (`claude`) — #15
 - Add interactive Laravel packages recipe: Sanctum, Passport, Spatie essentiels, extras (`claude`) — #12
 - Add Laravel coding instructions: DDD leger, Actions pattern, PHP robuste (`claude`) — #11
