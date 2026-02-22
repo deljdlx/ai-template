@@ -1,6 +1,6 @@
 import './styles/main.scss';
 import { initTheme, toggleTheme } from './theme.js';
-import { createRouter } from './router.js';
+import { createRouter, normalizePath, toHashHref } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
@@ -20,9 +20,11 @@ function bumpOps() {
 
 function setActiveLink(path) {
   for (const link of nav.querySelectorAll('a[data-router-link]')) {
-    const href = link.getAttribute('href');
+    const href = link.getAttribute('href') || '/';
+    const hashIndex = href.indexOf('#');
+    const linkPath = normalizePath(hashIndex >= 0 ? href.slice(hashIndex + 1) : href);
     // Match /api for both /api and /api/:tab routes
-    const isActive = href === path || (href === '/api' && path.startsWith('/api'));
+    const isActive = linkPath === path || (linkPath === '/api' && path.startsWith('/api'));
     link.setAttribute('aria-current', isActive ? 'page' : 'false');
   }
 }
@@ -31,6 +33,10 @@ function esc(str) {
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
+}
+
+function routeHref(path) {
+  return toHashHref(path);
 }
 
 /* ─── PAGE RENDERERS ─── */
@@ -53,7 +59,7 @@ function renderHome() {
     </div>
 
     <div class="home-grid">
-      <a href="/math" data-router-link class="module-card">
+      <a href="${routeHref('/math')}" data-router-link class="module-card">
         <span class="module-card__icon">&#x1D453;</span>
         <div class="module-card__name">Math</div>
         <div class="module-card__count">4 functions</div>
@@ -61,7 +67,7 @@ function renderHome() {
           <code>add</code> <code>multiply</code> <code>fibonacci</code> <code>isEven</code>
         </div>
       </a>
-      <a href="/strings" data-router-link class="module-card">
+      <a href="${routeHref('/strings')}" data-router-link class="module-card">
         <span class="module-card__icon">&ldquo;ab&rdquo;</span>
         <div class="module-card__name">Strings</div>
         <div class="module-card__count">4 functions</div>
@@ -69,7 +75,7 @@ function renderHome() {
           <code>reverse</code> <code>isPalindrome</code> <code>charFrequency</code> <code>spongebobCase</code>
         </div>
       </a>
-      <a href="/arrays" data-router-link class="module-card">
+      <a href="${routeHref('/arrays')}" data-router-link class="module-card">
         <span class="module-card__icon">[&thinsp;]</span>
         <div class="module-card__name">Arrays</div>
         <div class="module-card__count">4 functions</div>
@@ -77,7 +83,7 @@ function renderHome() {
           <code>shuffle</code> <code>flatten</code> <code>unique</code> <code>groupBy</code>
         </div>
       </a>
-      <a href="/api" data-router-link class="module-card">
+      <a href="${routeHref('/api')}" data-router-link class="module-card">
         <span class="module-card__icon">{&thinsp;}</span>
         <div class="module-card__name">API</div>
         <div class="module-card__count">5 endpoints</div>
@@ -121,7 +127,7 @@ function demoBlock(name, sig, inputsHtml, resultId) {
 
 function renderMath() {
   return `
-    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">Math</h2>
     <p class="page-desc">Technically correct. Profoundly unnecessary.</p>
 
@@ -147,7 +153,7 @@ function renderMath() {
 
 function renderStrings() {
   return `
-    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">Strings</h2>
     <p class="page-desc">Over-engineered solutions to problems nobody has.</p>
 
@@ -171,7 +177,7 @@ function renderStrings() {
 
 function renderArrays() {
   return `
-    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">Arrays</h2>
     <p class="page-desc">Reinventing wheels, one function at a time.</p>
 
@@ -242,17 +248,17 @@ function renderApi({ tab = 'combined' } = {}) {
   const activeTab = tabs.includes(tab) ? tab : 'combined';
 
   return `
-    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">API</h2>
     <p class="page-desc">Live data from the Laravel backend. Surprisingly real.</p>
     ${renderApiConfig()}
 
     <nav class="api-tabs" data-api-tabs>
-      <a href="/api/combined" data-router-link class="api-tabs__tab" data-active="${activeTab === 'combined'}">Combined</a>
-      <a href="/api/framework" data-router-link class="api-tabs__tab" data-active="${activeTab === 'framework'}">Framework</a>
-      <a href="/api/php" data-router-link class="api-tabs__tab" data-active="${activeTab === 'php'}">PHP</a>
-      <a href="/api/runtime" data-router-link class="api-tabs__tab" data-active="${activeTab === 'runtime'}">Runtime</a>
-      <a href="/api/packages" data-router-link class="api-tabs__tab" data-active="${activeTab === 'packages'}">Packages</a>
+      <a href="${routeHref('/api/combined')}" data-router-link class="api-tabs__tab" data-active="${activeTab === 'combined'}">Combined</a>
+      <a href="${routeHref('/api/framework')}" data-router-link class="api-tabs__tab" data-active="${activeTab === 'framework'}">Framework</a>
+      <a href="${routeHref('/api/php')}" data-router-link class="api-tabs__tab" data-active="${activeTab === 'php'}">PHP</a>
+      <a href="${routeHref('/api/runtime')}" data-router-link class="api-tabs__tab" data-active="${activeTab === 'runtime'}">Runtime</a>
+      <a href="${routeHref('/api/packages')}" data-router-link class="api-tabs__tab" data-active="${activeTab === 'packages'}">Packages</a>
     </nav>
 
     <div class="api-tab-content" data-api-content="combined" data-active="${activeTab === 'combined'}">
@@ -301,7 +307,7 @@ function renderApi({ tab = 'combined' } = {}) {
 
 function renderRegister() {
   return `
-    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">Register</h2>
     <p class="page-desc">Create an account to get a Sanctum API token.</p>
 
@@ -312,14 +318,14 @@ function renderRegister() {
       <input class="demo-input u-full-width" data-input="reg-password-confirm" type="password" placeholder="Confirm password" />
       <button class="btn btn--primary u-full-width" data-auth="register">Register</button>
       <div class="auth-result" data-auth-result="register"></div>
-      <p class="auth-link">Already have an account? <a href="/login" data-router-link>Login</a></p>
+      <p class="auth-link">Already have an account? <a href="${routeHref('/login')}" data-router-link>Login</a></p>
     </div>
   `;
 }
 
 function renderLogin() {
   return `
-    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">Login</h2>
     <p class="page-desc">Authenticate and receive a Sanctum API token.</p>
 
@@ -328,7 +334,7 @@ function renderLogin() {
       <input class="demo-input u-full-width" data-input="login-password" type="password" placeholder="Password" />
       <button class="btn btn--primary u-full-width" data-auth="login">Login</button>
       <div class="auth-result" data-auth-result="login"></div>
-      <p class="auth-link">No account? <a href="/register" data-router-link>Register</a></p>
+      <p class="auth-link">No account? <a href="${routeHref('/register')}" data-router-link>Register</a></p>
     </div>
   `;
 }
@@ -494,7 +500,7 @@ const router = createRouter({
     <div class="not-found">
       <div class="not-found__code">404</div>
       <p class="not-found__msg">Route <code>${esc(path)}</code> does not exist.</p>
-      <a href="/" data-router-link class="back-link">&larr; back to home</a>
+      <a href="${routeHref('/')}" data-router-link class="back-link">&larr; back to home</a>
     </div>
   `,
   onRouteChange: ({ path }) => {

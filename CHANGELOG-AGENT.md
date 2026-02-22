@@ -53,6 +53,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Migrate frontend routing to hash-based URLs (`/#/...`) and update all navigation links accordingly (`codex`)
 - Display frontend API client configuration on the `/api` page (base URL, env override, and resolved endpoints) (`codex`)
 - Integrate API tabs into router with proper URL routing (`copilot`)
   - Add `/api/:tab` route to handle sub-tabs (combined, framework, php, runtime, packages)

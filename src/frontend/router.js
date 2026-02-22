@@ -3,11 +3,18 @@ function escapeForRegExp(value) {
 }
 
 export function normalizePath(path) {
-  if (!path) {
+  if (typeof path !== 'string' || path.trim() === '') {
     return '/';
   }
 
-  const withoutQuery = path.split(/[?#]/u)[0] || '/';
+  let candidate = path.trim();
+  const hashIndex = candidate.indexOf('#');
+
+  if (hashIndex >= 0) {
+    candidate = candidate.slice(hashIndex + 1) || '/';
+  }
+
+  const withoutQuery = candidate.split('?')[0] || '/';
   const withLeadingSlash = withoutQuery.startsWith('/') ? withoutQuery : `/${withoutQuery}`;
 
   if (withLeadingSlash !== '/' && withLeadingSlash.endsWith('/')) {
@@ -15,6 +22,14 @@ export function normalizePath(path) {
   }
 
   return withLeadingSlash;
+}
+
+export function getPathFromHash(hash) {
+  return normalizePath(hash && hash.startsWith('#') ? hash.slice(1) : hash);
+}
+
+export function toHashHref(path) {
+  return `/#${normalizePath(path)}`;
 }
 
 export function createRouteMatcher(pattern) {
@@ -132,10 +147,20 @@ export function createRouter({
 
   function navigate(path, { replace = false, navigationState = null } = {}) {
     const normalizedPath = normalizePath(path);
-    const method = replace ? 'replaceState' : 'pushState';
+    const hashHref = `#${normalizedPath}`;
 
-    window.history[method](navigationState, '', normalizedPath);
-    render(normalizedPath);
+    if (replace) {
+      window.history.replaceState(navigationState, '', hashHref);
+      render(normalizedPath);
+      return;
+    }
+
+    if (window.location.hash === hashHref) {
+      render(normalizedPath);
+      return;
+    }
+
+    window.location.hash = normalizedPath;
   }
 
   function handleDocumentClick(event) {
@@ -164,12 +189,18 @@ export function createRouter({
       return;
     }
 
+    const isHashRoute = href.startsWith('#/') || href.startsWith('/#/');
+    const isPathRoute = href.startsWith('/');
+    if (!isHashRoute && !isPathRoute) {
+      return;
+    }
+
     event.preventDefault();
-    navigate(href);
+    navigate(normalizePath(href));
   }
 
-  function handlePopState() {
-    render(window.location.pathname);
+  function handleHashChange() {
+    render(getPathFromHash(window.location.hash));
   }
 
   function start() {
@@ -179,8 +210,11 @@ export function createRouter({
 
     state.started = true;
     document.addEventListener('click', handleDocumentClick);
-    window.addEventListener('popstate', handlePopState);
-    navigate(window.location.pathname, { replace: true });
+    window.addEventListener('hashchange', handleHashChange);
+    const initialPath = window.location.hash
+      ? getPathFromHash(window.location.hash)
+      : normalizePath(window.location.pathname);
+    navigate(initialPath, { replace: true });
   }
 
   function destroy() {
@@ -190,7 +224,7 @@ export function createRouter({
 
     state.started = false;
     document.removeEventListener('click', handleDocumentClick);
-    window.removeEventListener('popstate', handlePopState);
+    window.removeEventListener('hashchange', handleHashChange);
   }
 
   return {

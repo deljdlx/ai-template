@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { normalizePath, createRouteMatcher, findMatchingRoute } from '../router.js';
+import {
+  normalizePath,
+  getPathFromHash,
+  toHashHref,
+  createRouteMatcher,
+  findMatchingRoute,
+} from '../router.js';
 
 describe('normalizePath', () => {
   it('normalizes empty and root paths', () => {
@@ -10,6 +16,23 @@ describe('normalizePath', () => {
   it('removes query string and trailing slash', () => {
     expect(normalizePath('/about/?x=1')).toBe('/about');
     expect(normalizePath('about/')).toBe('/about');
+  });
+
+  it('normalizes hash-based href values', () => {
+    expect(normalizePath('#/api/php')).toBe('/api/php');
+    expect(normalizePath('/#/api/runtime')).toBe('/api/runtime');
+  });
+});
+
+describe('hash helpers', () => {
+  it('extracts route path from location hash', () => {
+    expect(getPathFromHash('#/api/packages')).toBe('/api/packages');
+    expect(getPathFromHash('')).toBe('/');
+  });
+
+  it('builds hash hrefs from route paths', () => {
+    expect(toHashHref('/math')).toBe('/#/math');
+    expect(toHashHref('/')).toBe('/#/');
   });
 });
 
