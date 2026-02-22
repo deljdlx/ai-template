@@ -6,6 +6,12 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Changed
+- Replace default Laravel welcome page with a stack dashboard (`claude`)
+  - `WelcomeController` — invokable controller using existing Infos domain Actions
+  - Stack overview cards: Laravel config, PHP runtime, server timestamps
+  - Installed packages list split by production/development with version badges
+  - API endpoints quick-reference panel
+  - Clean responsive design with Tailwind CSS and Inter font
 - Review and consolidate backend code (`claude`)
   - Add PHPDoc with `@return` array shapes to all domain Actions (Infos, Auth, FeatureFlags)
   - Add PHPDoc summaries to all controller public methods (Auth, Infos, FeatureFlags)
