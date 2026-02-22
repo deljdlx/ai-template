@@ -6,6 +6,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add interactive Laravel packages recipe: Sanctum, Passport, Spatie essentiels, extras (`claude`) — #12
 - Add Laravel coding instructions: DDD leger, Actions pattern, PHP robuste (`claude`) — #11
 - Add Makefile with init, serve, check, fix commands for frontend and Laravel (`claude`) — #9
 - Deploy Laravel 12 stack in src/backend/ with Pest, Pint, Larastan, IDE Helper, Debugbar, Boost v2 (`claude`) — #8
