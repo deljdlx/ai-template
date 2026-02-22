@@ -19,6 +19,9 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add interactive click counter to homepage (`copilot`) — #1
 - Add changelog maintenance instructions for agents (`claude`) — #2
 
+### Fixed
+- Fix storage/debugbar/ not ignored by .gitignore (`claude`) — #13
+
 ### Changed
 - Redesign all pages with "Useless Machine" retro-industrial identity and interactive demos (`claude`) — #4
 - Move all source and test files from root to src/frontend/ (`claude`) — #5
