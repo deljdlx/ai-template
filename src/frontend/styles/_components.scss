@@ -443,6 +443,81 @@
   margin: vars.$space-md 0;
 }
 
+// ── API tabs ─────────────────────────
+
+.api-tabs {
+  display: flex;
+  gap: vars.$space-xs;
+  margin: vars.$space-lg 0;
+  padding: vars.$space-xs;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  scrollbar-width: thin;
+
+  @media (max-width: vars.$bp-sm) {
+    gap: 0.25rem;
+    padding: 0.35rem;
+  }
+}
+
+.api-tabs__tab {
+  flex-shrink: 0;
+  padding: 0.5rem vars.$space-md;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: vars.$radius-sm;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    color vars.$transition-fast,
+    background vars.$transition-fast,
+    border-color vars.$transition-fast;
+
+  &:hover {
+    color: var(--text);
+    background: var(--bg-input);
+  }
+
+  &[data-active='true'] {
+    color: var(--accent-text);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: vars.$bp-sm) {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.65rem;
+  }
+}
+
+// ── API tab content ──────────────────
+
+.api-tab-content {
+  display: none;
+  animation: fade-in vars.$transition-base;
+
+  &[data-active='true'] {
+    display: block;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // ── API categories ───────────────────
 
 .api-category {
