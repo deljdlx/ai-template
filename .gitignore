@@ -93,6 +93,7 @@ composer.phar
 phpstan.neon.dist
 
 # Laravel
+storage/debugbar/
 storage/framework/cache/
 storage/framework/sessions/
 storage/framework/testing/
