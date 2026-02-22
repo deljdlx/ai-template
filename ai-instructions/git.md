@@ -55,8 +55,13 @@ Quand un agent recoit une tache en mode autonome, il prepare son worktree **dans
 # 1. Verifier que le worktree existe
 git worktree list
 
-# Si absent:
+# Si absent → le creer:
 git worktree add /tmp/{{PROJECT}}-AGENT_NAME-worktree origin/main
+
+# Si present → le reutiliser:
+cd /tmp/{{PROJECT}}-AGENT_NAME-worktree
+git fetch origin
+git checkout --detach origin/main
 
 # 2. Se placer dans le worktree
 cd /tmp/{{PROJECT}}-AGENT_NAME-worktree
@@ -64,8 +69,7 @@ cd /tmp/{{PROJECT}}-AGENT_NAME-worktree
 # 3. Verifier l'etat
 git status
 # Changements non commites? → stash ou demander
-# HEAD detache? → git checkout origin/main
-# Ancienne branche? → git branch -d AGENT_NAME/ancienne-branche
+# Ancienne branche locale? → git branch -d AGENT_NAME/ancienne-branche
 
 # 4. Creer la branche de travail
 git fetch origin
@@ -86,7 +90,12 @@ git rebase origin/main
 Si le rebase echoue → `git rebase --abort` et signaler a l'utilisateur.
 **Ne jamais forcer un push avec `--force` sans validation utilisateur.**
 
-### Etape 2 — Push et PR
+### Etape 2 — Changelog
+
+Avant de push, verifier que `CHANGELOG-AGENT.md` est a jour dans la section `[Unreleased]`.
+Voir `ai-instructions/changelog.md` pour le format exact.
+
+### Etape 3 — Push et PR
 
 ```bash
 # Verifier qu'aucune PR ouverte n'existe deja
@@ -102,7 +111,15 @@ Le body de la PR doit contenir au minimum:
 - `## Summary` avec 1-3 bullet points
 - `## Test plan` avec les resultats de build/test/lint
 
-### Etape 3 — Merge
+### Etape 4 — Verifier CI
+
+```bash
+gh pr checks NUMBER
+```
+
+Ne pas merger tant que les checks ne sont pas tous verts. Si un check echoue, corriger et re-pusher.
+
+### Etape 5 — Merge
 
 ```bash
 gh pr merge NUMBER --squash --delete-branch
@@ -113,7 +130,7 @@ gh pr merge NUMBER --squash --delete-branch
 
 Si le merge echoue, ne pas retenter en boucle. Signaler a l'utilisateur avec le numero de PR et l'erreur exacte.
 
-### Etape 4 — Nettoyage local
+### Etape 6 — Nettoyage local
 
 ```bash
 git checkout main
@@ -152,6 +169,33 @@ Si le fichier a ete modifie dans les 5 derniers commits de `main`:
 1. Premier arrive, premier merge (FIFO).
 2. Si deux PRs sont en conflit, le second agent doit rebaser apres le merge du premier.
 3. Le rebase est toujours prefere au merge commit.
+
+### Conflits sur les fichiers de lock
+
+Les fichiers `package-lock.json` et `composer.lock` sont frequemment source de conflits entre agents. Strategie:
+
+1. En cas de conflit sur un lock file, toujours accepter la version de `origin/main`.
+2. Apres resolution, relancer l'installation pour regenerer le lock file:
+   - `npm install` (pour `package-lock.json`)
+   - `composer install` (pour `composer.lock`)
+3. Commiter le lock file regenere.
+
+### Conflits sur les migrations Laravel
+
+Les migrations avec le meme timestamp peuvent causer des problemes d'ordre. Chaque agent doit:
+
+1. Utiliser `php artisan make:migration` qui genere un timestamp unique (avec secondes).
+2. Ne jamais renommer manuellement les fichiers de migration d'un autre agent.
+
+### Agent bloque
+
+Si un agent est bloque par une operation en attente (PR d'un autre agent non mergee, CI en echec sur main, etc.), il doit informer l'utilisateur avec:
+
+1. **Qui** bloque (nom de l'agent ou "CI").
+2. **Quoi** est bloque (numero de PR, branche, operation).
+3. **Action attendue** (merger la PR, corriger le CI, etc.).
+
+Ne pas retenter en boucle. Signaler une fois et attendre la resolution.
 
 ## 8. Maintenance du .gitignore
 

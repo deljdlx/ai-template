@@ -159,7 +159,7 @@ php artisan test
 ./vendor/bin/phpstan analyse
 ```
 
-Si le frontend est present:
+Si le frontend est present (voir `ai-instructions/css-scss.md` pour les conventions CSS/SCSS):
 
 ```bash
 npm run build
@@ -210,6 +210,8 @@ tests/
 ```
 
 **Note Laravel 12**: pas de `app/Console/Kernel.php`, `app/Exceptions/Handler.php`, ni `app/Http/Middleware/`. Tout est consolide dans `bootstrap/app.php`.
+
+**Pour les projets > 5 models**: migrer vers une structure par domaine (`app/Domain/`). Voir `ai-instructions/laravel-coding.md` section 1 pour le detail.
 
 `routes/api.php` n'existe pas par defaut. L'installer si besoin: `php artisan install:api`.
 
@@ -340,7 +342,7 @@ Reference complete: https://laravel.com/docs/12.x/boost
 
 ## Anti-patterns
 
-1. **Logique metier dans les controllers**: extraire dans des Services, Actions, ou directement sur le Model.
+1. **Logique metier dans les controllers**: extraire dans des Actions (prefere) ou directement sur le Model. Voir `ai-instructions/laravel-coding.md` pour le pattern Actions.
 2. **Requetes N+1**: toujours eager-load les relations (`with()`). Activer `Model::preventLazyLoading()` en dev.
 3. **Raw SQL sans binding**: toujours utiliser les query bindings (`?` ou `:param`) pour eviter les injections SQL.
 4. **Migrations non reversibles**: toujours implementer `down()` ou marquer explicitement `throw new RuntimeException('Irreversible')`.
@@ -348,3 +350,4 @@ Reference complete: https://laravel.com/docs/12.x/boost
 6. **Masse assignment non protege**: toujours definir `$fillable` ou `$guarded` sur les models.
 7. **Tests sans assertions**: un test qui passe sans `assert*` ne teste rien.
 8. **`dd()` ou `dump()` oublie dans le code commite**: equivalent du `console.log` oublie.
+9. **Collision de migrations multi-agent**: si plusieurs agents creent des migrations en parallele, les timestamps peuvent entrer en collision. Utiliser `php artisan make:migration` pour generer le timestamp (ne pas le creer manuellement).

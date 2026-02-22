@@ -120,7 +120,7 @@ $invoices = QueryBuilder::for(Invoice::class)
 
 ### Data (DTOs types)
 
-DTOs avec validation, casting, et serialisation integres. Remplace les DTOs manuels.
+DTOs avec validation, casting, et serialisation integres. Remplace les DTOs manuels decrits dans `ai-instructions/laravel-coding.md` section 6.
 
 ```bash
 composer require spatie/laravel-data

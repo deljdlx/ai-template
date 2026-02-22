@@ -110,8 +110,8 @@ Le changelog est un fichier modifie par tous les agents. Pour minimiser les conf
 ### En cas de conflit
 
 Si un rebase provoque un conflit sur le changelog:
-1. Garder les deux versions (la sienne + celle de l'autre agent).
-2. Verifier qu'aucune entree n'est dupliquee.
+1. Conserver **toutes les entrees des deux agents** sous chaque categorie, dans l'ordre chronologique. Ne jamais supprimer l'entree d'un autre agent.
+2. Verifier qu'aucune entree n'est dupliquee (meme description + meme agent = doublon).
 3. Si le conflit est trop complexe: `git rebase --abort` et signaler a l'utilisateur.
 
 ## Release

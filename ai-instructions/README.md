@@ -18,7 +18,7 @@ Un agent qui demarre une session doit lire dans cet ordre:
 | 7 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
 | 8 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
 
-Les recipes sont **conditionnelles**: ne lire que celles correspondant a la stack du projet.
+Les items 1-4 sont **obligatoires**. Les items 5-8 sont **conditionnels**: ne lire que si le projet utilise la stack Laravel.
 
 ## Architecture du template
 
@@ -91,7 +91,7 @@ rm -rf src/frontend/ vite.config.js eslint.config.js .prettierrc package.json pa
 1. **Mutualization maximale**: les 3 fichiers agents sont ultra-minces (identite + pointeur). Toute la logique est dans `ai-instructions/`.
 2. **Pas de duplication**: si une regle existe dans `git.md`, elle n'est pas repetee dans les recipes.
 3. **Recipes conditionnelles**: une recipe par stack, activee uniquement si pertinente.
-4. **Placeholders**: `{{PROJECT}}` est le seul placeholder. Il apparait dans les fichiers agent et dans `git.md`.
+4. **Placeholders**: `{{PROJECT}}` est le seul placeholder. Il apparait dans exactement 4 fichiers: `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, et `ai-instructions/git.md`.
 5. **Mode autonome comme standard**: le workflow worktree/branche/PR est le mode par defaut des qu'un agent travaille en autonomie.
 
 ## Ajouter une nouvelle recipe
