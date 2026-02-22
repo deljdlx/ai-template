@@ -3,109 +3,489 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reusable JS Router Demo</title>
+    <title>Useless Machine — Over-Engineered Utilities</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      /* ═══════════════════════════════════════
+         TOKENS
+         ═══════════════════════════════════════ */
       :root {
-        color-scheme: light;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.4;
+        --bg: #0b0b0f;
+        --bg-card: #131318;
+        --bg-input: #1a1a22;
+        --border: #2a2a35;
+        --border-focus: #ff6b35;
+        --text: #e8e6e3;
+        --text-dim: #8a8a95;
+        --accent: #ff6b35;
+        --accent-glow: rgba(255, 107, 53, 0.15);
+        --green: #4ade80;
+        --red: #f87171;
+        --yellow: #fbbf24;
+        --blue: #60a5fa;
+        --font-mono: 'Space Mono', monospace;
+        --font-serif: 'Instrument Serif', serif;
+        --radius: 6px;
       }
 
-      * {
+      /* ═══════════════════════════════════════
+         RESET & BASE
+         ═══════════════════════════════════════ */
+      *,
+      *::before,
+      *::after {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 16px;
+        scroll-behavior: smooth;
       }
 
       body {
-        margin: 0;
+        font-family: var(--font-mono);
+        background: var(--bg);
+        color: var(--text);
         min-height: 100vh;
-        background: linear-gradient(140deg, #f9fafb 0%, #e5edf9 100%);
-        color: #1f2937;
+        overflow-x: hidden;
+        line-height: 1.6;
       }
 
-      .layout {
-        max-width: 760px;
+      /* Noise overlay */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 256px;
+      }
+
+      /* ═══════════════════════════════════════
+         LAYOUT SHELL
+         ═══════════════════════════════════════ */
+      .machine {
+        max-width: 900px;
         margin: 0 auto;
-        padding: 2rem 1rem;
+        padding: 2rem 1.5rem 4rem;
       }
 
-      .shell {
-        border: 1px solid #d6deeb;
-        border-radius: 12px;
-        background: #ffffff;
-        box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
-        overflow: hidden;
+      /* ═══════════════════════════════════════
+         HEADER
+         ═══════════════════════════════════════ */
+      .machine-header {
+        text-align: center;
+        padding: 3rem 0 2rem;
+        position: relative;
       }
 
-      .shell__header {
-        padding: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-        background: #f8fafc;
+      .machine-header::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 2px;
+        background: var(--accent);
+        margin: 1.5rem auto 0;
+        box-shadow: 0 0 12px var(--accent-glow);
       }
 
-      .shell__title {
-        margin: 0;
-        font-size: 1.1rem;
+      .machine-title {
+        font-family: var(--font-serif);
+        font-size: clamp(2.4rem, 6vw, 3.8rem);
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        color: var(--text);
       }
 
-      .nav {
-        display: flex;
-        gap: 0.75rem;
+      .machine-title span {
+        color: var(--accent);
+      }
+
+      .machine-subtitle {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
         margin-top: 0.75rem;
       }
 
-      .nav a {
-        text-decoration: none;
-        color: #334155;
-        border: 1px solid #cbd5e1;
-        padding: 0.35rem 0.75rem;
-        border-radius: 999px;
+      /* ═══════════════════════════════════════
+         NAV
+         ═══════════════════════════════════════ */
+      .nav-bar {
+        display: flex;
+        justify-content: center;
+        gap: 0.25rem;
+        margin: 2rem 0;
+        padding: 0.25rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
       }
 
-      .nav a[aria-current='page'] {
-        border-color: #0f766e;
-        color: #0f766e;
+      .nav-bar a {
+        text-decoration: none;
+        color: var(--text-dim);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+      }
+
+      .nav-bar a:hover {
+        color: var(--text);
+        background: var(--bg-input);
+      }
+
+      .nav-bar a[aria-current='page'] {
+        color: var(--bg);
+        background: var(--accent);
         font-weight: 700;
       }
 
+      /* ═══════════════════════════════════════
+         PAGE CONTAINER
+         ═══════════════════════════════════════ */
       #app {
-        padding: 1rem;
+        animation: fadeIn 0.3s ease;
       }
 
-      .page h1 {
-        margin-top: 0;
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
-      .demo-button {
-        border: 0;
-        background: #0f766e;
-        color: #ffffff;
-        padding: 0.6rem 0.9rem;
-        border-radius: 8px;
+      /* ═══════════════════════════════════════
+         PAGE: HOME
+         ═══════════════════════════════════════ */
+      .home-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .module-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
         cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
       }
 
-      .demo-button:hover {
-        background: #115e59;
+      .module-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 20px var(--accent-glow);
       }
 
-      .inline-link {
-        color: #0f766e;
+      .module-card__icon {
+        font-size: 1.8rem;
+        margin-bottom: 0.75rem;
+        display: block;
+      }
+
+      .module-card__name {
+        font-family: var(--font-serif);
+        font-size: 1.4rem;
+        font-style: italic;
+        margin-bottom: 0.25rem;
+      }
+
+      .module-card__count {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 0.75rem;
+      }
+
+      .module-card__fn {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        line-height: 1.8;
+      }
+
+      .module-card__fn code {
+        background: var(--bg-input);
+        padding: 0.15rem 0.4rem;
+        border-radius: 3px;
+        color: var(--green);
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+      }
+
+      .home-stats {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .stat {
+        text-align: center;
+      }
+
+      .stat__value {
+        font-size: 1.8rem;
+        font-family: var(--font-serif);
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .stat__label {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--text-dim);
+        margin-top: 0.15rem;
+      }
+
+      /* ═══════════════════════════════════════
+         PAGE: MODULE DEMO
+         ═══════════════════════════════════════ */
+      .page-title {
+        font-family: var(--font-serif);
+        font-size: 2rem;
+        font-style: italic;
+        margin-bottom: 0.25rem;
+      }
+
+      .page-desc {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin-bottom: 2rem;
+      }
+
+      .demo-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+
+      .demo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg-input);
+      }
+
+      .demo-header__name {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--green);
+      }
+
+      .demo-header__sig {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+      }
+
+      .demo-body {
+        padding: 1rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .demo-input {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 0.5rem 0.75rem;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.15s;
+        min-width: 120px;
+      }
+
+      .demo-input:focus {
+        border-color: var(--border-focus);
+      }
+
+      .demo-input::placeholder {
+        color: var(--text-dim);
+        opacity: 0.5;
+      }
+
+      .demo-run {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        background: var(--accent);
+        color: var(--bg);
+        border: none;
+        padding: 0.55rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: opacity 0.15s;
+        white-space: nowrap;
+      }
+
+      .demo-run:hover {
+        opacity: 0.85;
+      }
+
+      .demo-result {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: var(--bg);
+        border: 1px dashed var(--border);
+        border-radius: 4px;
+        font-size: 0.8rem;
+        min-height: 2.4rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .demo-result--empty {
+        color: var(--text-dim);
+        font-style: italic;
+      }
+
+      .demo-result code {
+        color: var(--yellow);
+        word-break: break-all;
+      }
+
+      .demo-result .label {
+        color: var(--text-dim);
+        margin-right: 0.5rem;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-dim);
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+        transition: color 0.15s;
+      }
+
+      .back-link:hover {
+        color: var(--accent);
+      }
+
+      /* ═══════════════════════════════════════
+         OPERATIONS COUNTER
+         ═══════════════════════════════════════ */
+      .ops-counter {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.4rem 0.75rem;
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        z-index: 100;
+      }
+
+      .ops-counter__value {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      /* ═══════════════════════════════════════
+         404
+         ═══════════════════════════════════════ */
+      .not-found {
+        text-align: center;
+        padding: 4rem 1rem;
+      }
+
+      .not-found__code {
+        font-family: var(--font-serif);
+        font-size: 5rem;
+        font-style: italic;
+        color: var(--accent);
+        line-height: 1;
+      }
+
+      .not-found__msg {
+        color: var(--text-dim);
+        font-size: 0.8rem;
+        margin: 1rem 0;
+      }
+
+      /* ═══════════════════════════════════════
+         RESPONSIVE
+         ═══════════════════════════════════════ */
+      @media (max-width: 600px) {
+        .machine {
+          padding: 1rem 1rem 3rem;
+        }
+
+        .home-stats {
+          gap: 1rem;
+        }
+
+        .demo-body {
+          flex-direction: column;
+        }
+
+        .demo-input {
+          width: 100%;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="layout">
-      <div class="shell">
-        <header class="shell__header">
-          <h1 class="shell__title">Reusable JS Router Demo</h1>
-          <nav class="nav" data-nav>
-            <a href="/" data-router-link aria-current="page">Home</a>
-            <a href="/about" data-router-link aria-current="false">About</a>
-          </nav>
-        </header>
-        <div id="app"></div>
-      </div>
-    </main>
+    <div class="machine">
+      <header class="machine-header">
+        <h1 class="machine-title">The <span>Useless</span> Machine</h1>
+        <p class="machine-subtitle">Over-engineered utilities for absolutely nothing</p>
+      </header>
+
+      <nav class="nav-bar" data-nav>
+        <a href="/" data-router-link aria-current="page">Home</a>
+        <a href="/math" data-router-link aria-current="false">Math</a>
+        <a href="/strings" data-router-link aria-current="false">Strings</a>
+        <a href="/arrays" data-router-link aria-current="false">Arrays</a>
+      </nav>
+
+      <div id="app"></div>
+    </div>
+
+    <div class="ops-counter">
+      ops: <span class="ops-counter__value" data-ops>0</span>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
