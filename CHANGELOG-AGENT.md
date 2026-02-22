@@ -15,6 +15,15 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Fix CI check step: allow skipping when no CI is configured or network is unavailable (`claude`)
 
 ### Added
+- Add authentication endpoints with Laravel Sanctum (`claude`)
+  - `POST /api/auth/register` — create account, return user + API token
+  - `POST /api/auth/login` — authenticate, return user + API token
+  - `RegisterUserAction` + `LoginUserAction` — DDD-lite domain actions
+  - `AuthController` — validates requests, delegates to actions
+  - `HasApiTokens` trait added to User model
+  - Frontend: Register and Login pages with form UI and error handling
+  - `postJson()` API helper with Laravel validation error parsing
+  - Pest feature tests (7) + Vitest unit tests (3)
 - Add packages listing endpoint with full-stack integration (`claude`)
   - `GET /api/infos/packages` — lists installed Composer packages (name, constraint, version, dev flag)
   - `GetPackagesAction` — reads composer.json + composer.lock
