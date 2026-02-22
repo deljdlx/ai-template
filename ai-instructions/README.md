@@ -13,8 +13,9 @@ Un agent qui demarre une session doit lire dans cet ordre:
 | 2 | `git.md` | Regles git, branches, worktrees, mode autonome, publication, multi-agents |
 | 3 | `changelog.md` | Format et regles de tenue du changelog |
 | 4 | `css-scss.md` | Conventions CSS/SCSS (nommage, nesting, variables, responsive) |
-| 5 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
-| 6 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
+| 5 | `laravel-coding.md` | Architecture Laravel (DDD leger, Actions, Models, PHP robuste) — si stack Laravel |
+| 6 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
+| 7 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
 
 Les recipes sont **conditionnelles**: ne lire que celles correspondant a la stack du projet.
 
@@ -34,6 +35,7 @@ ai-instructions/
 ├── git.md                        ← regles git multi-agents
 ├── changelog.md                  ← format changelog
 ├── css-scss.md                   ← conventions CSS/SCSS
+├── laravel-coding.md             ← architecture Laravel (DDD leger, Actions, PHP robuste)
 └── recipes/
     ├── stack-vite.md             ← recipe JS/Vite
     └── stack-laravel.md          ← recipe Laravel 12/SQLite
