@@ -213,34 +213,52 @@ function renderApi() {
     <h2 class="page-title">API</h2>
     <p class="page-desc">Live data from the Laravel backend. Surprisingly real.</p>
 
-    <div class="api-category">
-      <h3 class="api-category__title">Combined Diagnostics</h3>
-      <p class="api-category__desc">Aggregate information across the entire stack</p>
-      ${apiBlock('infos', '/api/infos')}
+    <nav class="api-tabs" data-api-tabs>
+      <button class="api-tabs__tab" data-api-tab="combined" data-active="true">Combined</button>
+      <button class="api-tabs__tab" data-api-tab="framework">Framework</button>
+      <button class="api-tabs__tab" data-api-tab="php">PHP</button>
+      <button class="api-tabs__tab" data-api-tab="runtime">Runtime</button>
+      <button class="api-tabs__tab" data-api-tab="packages">Packages</button>
+    </nav>
+
+    <div class="api-tab-content" data-api-content="combined" data-active="true">
+      <div class="api-category">
+        <h3 class="api-category__title">Combined Diagnostics</h3>
+        <p class="api-category__desc">Aggregate information across the entire stack</p>
+        ${apiBlock('infos', '/api/infos')}
+      </div>
     </div>
 
-    <div class="api-category">
-      <h3 class="api-category__title">Framework Information</h3>
-      <p class="api-category__desc">Laravel version, environment, configuration</p>
-      ${apiBlock('laravel', '/api/infos/laravel')}
+    <div class="api-tab-content" data-api-content="framework" data-active="false">
+      <div class="api-category">
+        <h3 class="api-category__title">Framework Information</h3>
+        <p class="api-category__desc">Laravel version, environment, configuration</p>
+        ${apiBlock('laravel', '/api/infos/laravel')}
+      </div>
     </div>
 
-    <div class="api-category">
-      <h3 class="api-category__title">PHP Runtime</h3>
-      <p class="api-category__desc">PHP version, SAPI, extensions, and capabilities</p>
-      ${apiBlock('php', '/api/infos/php')}
+    <div class="api-tab-content" data-api-content="php" data-active="false">
+      <div class="api-category">
+        <h3 class="api-category__title">PHP Runtime</h3>
+        <p class="api-category__desc">PHP version, SAPI, extensions, and capabilities</p>
+        ${apiBlock('php', '/api/infos/php')}
+      </div>
     </div>
 
-    <div class="api-category">
-      <h3 class="api-category__title">Application Runtime</h3>
-      <p class="api-category__desc">Server timestamps, timezone, and app metadata</p>
-      ${apiBlock('runtime', '/api/infos/runtime')}
+    <div class="api-tab-content" data-api-content="runtime" data-active="false">
+      <div class="api-category">
+        <h3 class="api-category__title">Application Runtime</h3>
+        <p class="api-category__desc">Server timestamps, timezone, and app metadata</p>
+        ${apiBlock('runtime', '/api/infos/runtime')}
+      </div>
     </div>
 
-    <div class="api-category">
-      <h3 class="api-category__title">Dependencies</h3>
-      <p class="api-category__desc">Installed Composer packages and versions</p>
-      ${apiBlock('packages', '/api/infos/packages')}
+    <div class="api-tab-content" data-api-content="packages" data-active="false">
+      <div class="api-category">
+        <h3 class="api-category__title">Dependencies</h3>
+        <p class="api-category__desc">Installed Composer packages and versions</p>
+        ${apiBlock('packages', '/api/infos/packages')}
+      </div>
     </div>
   `;
 }
@@ -390,6 +408,12 @@ app.addEventListener('click', (event) => {
   const apiBtn = event.target.closest('[data-api]');
   if (apiBtn) {
     handleApi(apiBtn.dataset.api);
+    return;
+  }
+
+  const apiTabBtn = event.target.closest('[data-api-tab]');
+  if (apiTabBtn) {
+    switchApiTab(apiTabBtn.dataset.apiTab);
   }
 });
 
@@ -398,3 +422,21 @@ document.addEventListener('click', (event) => {
     toggleTheme();
   }
 });
+
+/* ─── API TAB SWITCHER ─── */
+
+function switchApiTab(tabName) {
+  // Update tab buttons
+  const tabs = app.querySelectorAll('[data-api-tab]');
+  tabs.forEach((tab) => {
+    const isActive = tab.dataset.apiTab === tabName;
+    tab.dataset.active = isActive ? 'true' : 'false';
+  });
+
+  // Update content panels
+  const contents = app.querySelectorAll('[data-api-content]');
+  contents.forEach((content) => {
+    const isActive = content.dataset.apiContent === tabName;
+    content.dataset.active = isActive ? 'true' : 'false';
+  });
+}

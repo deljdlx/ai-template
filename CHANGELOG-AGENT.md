@@ -35,6 +35,13 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Add tabbed navigation to frontend API page (`copilot`)
+  - Implement 5 sub-tabs: Combined, Framework, PHP, Runtime, Packages
+  - Show one category at a time for focused exploration
+  - Add `.api-tabs` styled component with active state management
+  - Fade-in animation when switching between tabs
+  - Responsive design with horizontal scroll on mobile
+  - Improves UX by reducing visual clutter and organizing content
 - Organize frontend API page with categorical sections (`copilot`)
   - Group endpoints into 5 semantic categories: Combined Diagnostics, Framework Information, PHP Runtime, Application Runtime, Dependencies
   - Add descriptive titles and explanations for each category
