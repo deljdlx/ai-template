@@ -13,6 +13,7 @@ const API_ENDPOINTS = Object.freeze({
   php: '/infos/php',
   runtime: '/infos/runtime',
   packages: '/infos/packages',
+  featureFlags: '/feature-flags',
 });
 
 export const API_CONFIG = Object.freeze({
@@ -67,6 +68,55 @@ async function postJson(path, body) {
   return response.json();
 }
 
+/**
+ * Puts JSON to the given API path.
+ * @param {string} path - Relative path under API_BASE
+ * @param {Object} body - Request body
+ * @returns {Promise<Object>}
+ */
+async function putJson(path, body) {
+  const url = `${API_BASE}${path}`;
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    const message = data.message || `API ${response.status}: ${response.statusText}`;
+    const err = new Error(message);
+    err.errors = data.errors || {};
+    throw err;
+  }
+
+  return response.json();
+}
+
+/**
+ * Deletes a resource from the given API path.
+ * @param {string} path - Relative path under API_BASE
+ * @returns {Promise<void>}
+ */
+async function deleteJson(path) {
+  const url = `${API_BASE}${path}`;
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json' },
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    const message = data.message || `API ${response.status}: ${response.statusText}`;
+    const err = new Error(message);
+    err.errors = data.errors || {};
+    throw err;
+  }
+}
+
 /** @returns {Promise<Object>} Combined laravel + php + runtime infos */
 export const getInfos = () => fetchJson(API_ENDPOINTS.infos);
 
@@ -95,3 +145,28 @@ export const registerUser = (data) => postJson('/auth/register', data);
  * @returns {Promise<{user: Object, token: string}>}
  */
 export const loginUser = (data) => postJson('/auth/login', data);
+
+/** @returns {Promise<{scope: string, items: Array<{name: string, enabled: boolean}>}>} */
+export const getFeatureFlags = () => fetchJson(API_ENDPOINTS.featureFlags);
+
+/**
+ * Create a feature flag in Pennant's global scope.
+ * @param {{name: string, enabled: boolean}} data
+ * @returns {Promise<{name: string, enabled: boolean}>}
+ */
+export const createFeatureFlag = (data) => postJson(API_ENDPOINTS.featureFlags, data);
+
+/**
+ * Update an existing feature flag in Pennant's global scope.
+ * @param {string} name
+ * @param {boolean} enabled
+ * @returns {Promise<{name: string, enabled: boolean}>}
+ */
+export const updateFeatureFlag = (name, enabled) => putJson(`${API_ENDPOINTS.featureFlags}/${encodeURIComponent(name)}`, { enabled });
+
+/**
+ * Delete a feature flag from Pennant's global scope.
+ * @param {string} name
+ * @returns {Promise<void>}
+ */
+export const deleteFeatureFlag = (name) => deleteJson(`${API_ENDPOINTS.featureFlags}/${encodeURIComponent(name)}`);

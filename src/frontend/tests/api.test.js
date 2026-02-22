@@ -1,5 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages, registerUser, loginUser } from '../api.js';
+import {
+  API_CONFIG,
+  getInfos,
+  getLaravelInfo,
+  getPhpInfo,
+  getRuntimeInfo,
+  getPackages,
+  registerUser,
+  loginUser,
+  getFeatureFlags,
+  createFeatureFlag,
+  updateFeatureFlag,
+  deleteFeatureFlag,
+} from '../api.js';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
@@ -26,6 +39,7 @@ describe('API_CONFIG', () => {
       php: '/infos/php',
       runtime: '/infos/runtime',
       packages: '/infos/packages',
+      featureFlags: '/feature-flags',
     });
   });
 });
@@ -138,6 +152,55 @@ describe('loginUser', () => {
     expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', expect.objectContaining({
       method: 'POST',
       body: JSON.stringify(payload),
+    }));
+  });
+});
+
+describe('feature flags api', () => {
+  it('should fetch feature flags list', async () => {
+    const data = { scope: 'global', items: [{ name: 'checkout.v2', enabled: true }] };
+    mockFetch.mockResolvedValue(okResponse(data));
+
+    const result = await getFeatureFlags();
+
+    expect(result).toEqual(data);
+    expect(mockFetch).toHaveBeenCalledWith('/api/feature-flags', expect.any(Object));
+  });
+
+  it('should create a feature flag', async () => {
+    const data = { name: 'checkout.v2', enabled: true };
+    mockFetch.mockResolvedValue(okResponse(data));
+
+    const payload = { name: 'checkout.v2', enabled: true };
+    const result = await createFeatureFlag(payload);
+
+    expect(result).toEqual(data);
+    expect(mockFetch).toHaveBeenCalledWith('/api/feature-flags', expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }));
+  });
+
+  it('should update a feature flag', async () => {
+    const data = { name: 'checkout.v2', enabled: false };
+    mockFetch.mockResolvedValue(okResponse(data));
+
+    const result = await updateFeatureFlag('checkout.v2', false);
+
+    expect(result).toEqual(data);
+    expect(mockFetch).toHaveBeenCalledWith('/api/feature-flags/checkout.v2', expect.objectContaining({
+      method: 'PUT',
+      body: JSON.stringify({ enabled: false }),
+    }));
+  });
+
+  it('should delete a feature flag', async () => {
+    mockFetch.mockResolvedValue(okResponse({}));
+
+    await deleteFeatureFlag('checkout.v2');
+
+    expect(mockFetch).toHaveBeenCalledWith('/api/feature-flags/checkout.v2', expect.objectContaining({
+      method: 'DELETE',
     }));
   });
 });
