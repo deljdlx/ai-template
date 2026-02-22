@@ -23,6 +23,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Fix storage/debugbar/ not ignored by .gitignore (`claude`) — #13
 
 ### Changed
+- Update packages recipe: allow Sanctum + Passport coexistence with separate guards (`claude`) — #14
 - Redesign all pages with "Useless Machine" retro-industrial identity and interactive demos (`claude`) — #4
 - Move all source and test files from root to src/frontend/ (`claude`) — #5
 - Extract 450 lines of inline CSS from index.html into modular SCSS files (`claude`) — #7

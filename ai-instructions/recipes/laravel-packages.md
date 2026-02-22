@@ -20,7 +20,9 @@ Catalogue de packages courants a installer selon les besoins du projet.
 
 ## Authentification & API
 
-### Sanctum (recommande par defaut)
+Sanctum et Passport couvrent des besoins differents et **peuvent coexister** dans le meme projet. Installer les deux si le projet le necessite.
+
+### Sanctum
 
 Auth tokens pour SPA et apps mobile first-party. Leger, sans OAuth.
 
@@ -30,7 +32,7 @@ php artisan install:api
 
 Cela installe Sanctum, cree `routes/api.php`, et publie les migrations.
 
-**Quand l'utiliser**: SPA (Vue/React/Inertia), app mobile qui consomme sa propre API, tout projet qui n'a pas besoin d'OAuth2.
+**Quand l'utiliser**: SPA (Vue/React/Inertia), app mobile qui consomme sa propre API, authentification first-party par tokens ou cookies.
 
 **Configuration cle**:
 ```php
@@ -42,14 +44,29 @@ Cela installe Sanctum, cree `routes/api.php`, et publie les migrations.
 
 ### Passport
 
-OAuth2 complet. Necessaire uniquement pour exposer une API a des developpeurs tiers.
+OAuth2 complet pour exposer une API a des developpeurs tiers.
 
 ```bash
 composer require laravel/passport
 php artisan passport:install
 ```
 
-**Quand l'utiliser**: API publique avec clients tiers, authorization code flow, refresh tokens, scopes granulaires. Si l'utilisateur hesite entre Sanctum et Passport, **recommander Sanctum**.
+**Quand l'utiliser**: API publique avec clients tiers, authorization code flow, refresh tokens, scopes granulaires.
+
+### Sanctum + Passport ensemble
+
+C'est un cas valide. Exemple typique: Sanctum pour l'auth first-party (SPA, mobile maison) et Passport pour les clients OAuth2 tiers. Utiliser des guards separes pour distinguer les deux:
+
+```php
+// routes/api.php
+Route::middleware('auth:sanctum')->group(function () {
+    // Routes first-party (SPA, mobile)
+});
+
+Route::middleware('auth:api')->group(function () {
+    // Routes OAuth2 (clients tiers)
+});
+```
 
 ---
 
@@ -384,5 +401,5 @@ AWS_BUCKET=...
 2. **Installer "au cas ou"**: chaque package ajoute de la surface de maintenance. N'installer que ce qui est necessaire maintenant.
 3. **Oublier les migrations**: la plupart des packages Spatie publient des migrations. Les lancer immediatement.
 4. **Ignorer la config publiee**: lire le fichier de config publie et ajuster aux besoins du projet.
-5. **Sanctum + Passport ensemble**: choisir l'un ou l'autre, pas les deux.
+5. **Passport sans besoin OAuth2**: si le projet n'a que des clients first-party, Sanctum suffit. Passport n'est justifie que pour des clients tiers.
 6. **Horizon sans Redis**: Horizon ne fonctionne qu'avec le driver Redis. Verifier `QUEUE_CONNECTION` avant d'installer.
