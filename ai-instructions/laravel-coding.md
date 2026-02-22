@@ -268,7 +268,9 @@ final class StoreInvoiceRequest extends FormRequest
 
 ## 6. DTOs
 
-Un DTO est un objet immutable qui transporte des donnees entre couches. Utiliser **uniquement** quand une Action a besoin de plus de 3 parametres.
+Un DTO est un objet immutable qui transporte des donnees entre couches. Utiliser quand une Action a besoin de **4+ parametres**, ou quand l'objet a un sens semantique en tant qu'unite (ex: `Money`, `Address`, `DateRange`).
+
+> **Alternative**: si `spatie/laravel-data` est installe (voir `recipes/laravel-packages.md`), l'utiliser a la place des DTOs manuels. Il ajoute la validation et la serialisation automatiques.
 
 ```php
 declare(strict_types=1);
@@ -584,11 +586,10 @@ Regles:
 
 1. **Fat controller**: logique metier dans le controller. → Extraire en Action.
 2. **Fat model**: model de 500+ lignes. → Traits, concerns, ou Actions pour la logique complexe.
-3. **Repository pattern sur Eloquent**: ajouter une couche d'abstraction sur un ORM deja abstrait. → Utiliser Eloquent directement, scopes pour les queries reutilisees.
-4. **Service fourre-tout**: `InvoiceService` avec 20 methodes. → Actions separees, une responsabilite chacune.
-5. **DTO pour tout**: creer un DTO pour passer 2 parametres. → Passer les parametres directement.
-6. **Interface sans raison**: `InvoiceRepositoryInterface` avec une seule implementation. → Creer l'interface quand il y a un vrai besoin de polymorphisme.
-7. **Logique dans les Blade**: `@if ($order->items->sum('price') * 1.2 > 100)`. → Methode sur le Model ou computed dans le controller.
-8. **Transaction oubliee**: operations multi-tables sans `DB::transaction()`. → Toujours wrapper les operations qui doivent etre atomiques.
-9. **N+1 silencieux**: boucle sur une collection sans eager-loading. → `with()` dans la query, `preventLazyLoading()` en dev.
-10. **Montants en float**: `$table->decimal('price')` et calculs flottants. → Integer en centimes, conversion a l'affichage.
+3. **Service fourre-tout**: `InvoiceService` avec 20 methodes. → Actions separees, une responsabilite chacune.
+4. **DTO pour tout**: creer un DTO pour passer 2 parametres. → Passer les parametres directement (seuil: 4+ parametres ou unite semantique).
+5. **Interface sans raison**: `InvoiceRepositoryInterface` avec une seule implementation. → Creer l'interface quand il y a un vrai besoin de polymorphisme.
+6. **Logique dans les Blade**: `@if ($order->items->sum('price') * 1.2 > 100)`. → Methode sur le Model ou computed dans le controller.
+7. **Transaction oubliee**: operations multi-tables sans `DB::transaction()`. → Toujours wrapper les operations qui doivent etre atomiques.
+8. **N+1 silencieux**: boucle sur une collection sans eager-loading. → `with()` dans la query, `preventLazyLoading()` en dev.
+9. **Montants en float**: `$table->decimal('price')` et calculs flottants. → Integer en centimes, conversion a l'affichage.

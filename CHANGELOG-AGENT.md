@@ -6,6 +6,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add cross-references between instruction files and migration conflict guidance (`claude`) — #15
 - Add interactive Laravel packages recipe: Sanctum, Passport, Spatie essentiels, extras (`claude`) — #12
 - Add Laravel coding instructions: DDD leger, Actions pattern, PHP robuste (`claude`) — #11
 - Add Makefile with init, serve, check, fix commands for frontend and Laravel (`claude`) — #9
@@ -23,6 +24,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Fix storage/debugbar/ not ignored by .gitignore (`claude`) — #13
 
 ### Changed
+- Consolidate multi-agent instructions: resolve contradictions, deduplicate anti-patterns, add worktree reuse logic, lock file and migration conflict strategies, agent communication protocol (`claude`) — #15
 - Update packages recipe: allow Sanctum + Passport coexistence with separate guards (`claude`) — #14
 - Redesign all pages with "Useless Machine" retro-industrial identity and interactive demos (`claude`) — #4
 - Move all source and test files from root to src/frontend/ (`claude`) — #5
