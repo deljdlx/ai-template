@@ -89,6 +89,9 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Consolidate frontend architecture by extracting Feature Flags page logic into a dedicated module (`codex`)
+  - Move rendering and interactions from `main.js` to `src/frontend/pages/feature-flags-page.js`
+  - Keep router and delegated click handling in `main.js` as orchestration layer only
 - Group frontend utility demos under a single `Tests` section with Math/Strings/Arrays sub-tabs (`codex`)
 - Migrate frontend routing to hash-based URLs (`/#/...`) and update all navigation links accordingly (`codex`)
 - Display frontend API client configuration on the `/api` page (base URL, env override, and resolved endpoints) (`codex`)
