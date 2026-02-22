@@ -17,9 +17,18 @@ Stack typique: Laravel 12, SQLite, Pest, Pint, Larastan, IDE Helper, Boost (MCP)
 
 ## Installation from scratch
 
-### 1. Creer le projet
+### 1. Emplacement du projet
+
+**Avant de creer la stack, demander a l'utilisateur** si le projet Laravel doit etre place dans un sous-dossier `src/backend/` ou directement a la racine du depot. Si le depot contient (ou contiendra) un frontend separe (ex: `src/frontend/`), preferer `src/backend/`.
+
+### 2. Creer le projet
 
 ```bash
+# Option A — dans src/backend/
+composer create-project laravel/laravel:^12.0 src/backend
+cd src/backend
+
+# Option B — a la racine
 composer create-project laravel/laravel:^12.0 NOM_DU_PROJET
 cd NOM_DU_PROJET
 ```
@@ -34,7 +43,7 @@ L'installeur propose: starter kit (None/React/Vue/Livewire), framework de test (
 
 **Choisir: Pest + SQLite.**
 
-### 2. Verifier que SQLite fonctionne
+### 3. Verifier que SQLite fonctionne
 
 ```bash
 php artisan migrate
@@ -42,7 +51,7 @@ php artisan migrate
 
 Le fichier `database/database.sqlite` est cree automatiquement. Aucune configuration supplementaire requise.
 
-### 3. Installer les outils de dev
+### 4. Installer les outils de dev
 
 ```bash
 # Pest (si pas choisi a l'installation)
@@ -62,7 +71,7 @@ composer require barryvdh/laravel-debugbar --dev
 composer require laravel/boost --dev
 ```
 
-### 4. Configurer Larastan
+### 5. Configurer Larastan
 
 Creer `phpstan.neon` a la racine:
 
@@ -78,7 +87,7 @@ parameters:
 
 Commencer au level 5, monter progressivement. Level 9 = maximum.
 
-### 5. Generer les fichiers IDE Helper
+### 6. Generer les fichiers IDE Helper
 
 ```bash
 php artisan ide-helper:generate    # Facades → _ide_helper.php
@@ -96,7 +105,7 @@ _ide_helper_models.php
 .phpstorm.meta.php
 ```
 
-### 6. Configurer Boost
+### 7. Configurer Boost
 
 ```bash
 php artisan boost:install
