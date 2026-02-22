@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 final class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,8 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // TODO(codex): enable strict lazy-loading prevention once domain models are in place.
+        // Prevent lazy-loading in non-production environments to catch N+1 queries early.
+        // In production, lazy-loads are allowed to avoid breaking on edge cases.
+        Model::preventLazyLoading(! $this->app->isProduction());
     }
 }

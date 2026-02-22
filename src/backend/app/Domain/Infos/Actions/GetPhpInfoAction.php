@@ -6,6 +6,11 @@ namespace App\Domain\Infos\Actions;
 
 final class GetPhpInfoAction
 {
+    /**
+     * Retrieve PHP runtime information: version, SAPI, limits, loaded extensions.
+     *
+     * @return array{php_version: string, sapi: string, memory_limit: string|false, max_execution_time: int, extensions: list<string>}
+     */
     public function execute(): array
     {
         $extensions = get_loaded_extensions();

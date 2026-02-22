@@ -11,6 +11,11 @@ use Illuminate\Validation\ValidationException;
 final class LoginUserAction
 {
     /**
+     * Authenticate a user by email/password and generate a Sanctum API token.
+     *
+     * Returns the same error for both "user not found" and "wrong password"
+     * to prevent email enumeration.
+     *
      * @param  array{email: string, password: string}  $data
      * @return array{user: User, token: string}
      *

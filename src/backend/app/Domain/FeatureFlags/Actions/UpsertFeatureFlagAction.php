@@ -11,6 +11,10 @@ final class UpsertFeatureFlagAction
     private const GLOBAL_SCOPE = 'global';
 
     /**
+     * Create or update a global feature flag activation state.
+     *
+     * Idempotent: calling with the same values produces the same result.
+     *
      * @return array{name: string, enabled: bool}
      */
     public function execute(string $name, bool $enabled): array

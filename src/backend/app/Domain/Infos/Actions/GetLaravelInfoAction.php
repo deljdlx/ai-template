@@ -6,6 +6,24 @@ namespace App\Domain\Infos\Actions;
 
 final class GetLaravelInfoAction
 {
+    /**
+     * Retrieve Laravel framework configuration and environment details.
+     *
+     * @return array{
+     *     framework: string,
+     *     laravel_version: string,
+     *     environment: string,
+     *     debug: bool,
+     *     locale: mixed,
+     *     timezone: mixed,
+     *     app_url: mixed,
+     *     cache_driver: mixed,
+     *     queue_driver: mixed,
+     *     database_driver: mixed,
+     *     session_driver: mixed,
+     *     broadcast_driver: mixed
+     * }
+     */
     public function execute(): array
     {
         return [

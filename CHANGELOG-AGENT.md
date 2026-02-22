@@ -5,6 +5,16 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Changed
+- Review and consolidate backend code (`claude`)
+  - Add PHPDoc with `@return` array shapes to all domain Actions (Infos, Auth, FeatureFlags)
+  - Add PHPDoc summaries to all controller public methods (Auth, Infos, FeatureFlags)
+  - Add `declare(strict_types=1)` to Controller base, User model, UserFactory
+  - Wrap `DeleteFeatureFlagAction` in DB transaction for atomic deactivate+delete
+  - Fix `response()->json(status: 204)` to `response()->json([], 204)` in FeatureFlagController
+  - Enable `Model::preventLazyLoading()` in non-production environments (AppServiceProvider)
+  - Remove dead commented-out import in User model
+
 ### Fixed
 - Fix backend feature-flag route validation and consolidate related controller rules (`codex`)
   - `PUT /api/feature-flags/{name}` — now validates route `name` with same constraints as create

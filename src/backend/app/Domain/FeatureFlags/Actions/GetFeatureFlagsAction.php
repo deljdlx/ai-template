@@ -12,6 +12,8 @@ final class GetFeatureFlagsAction
     private const GLOBAL_SCOPE = 'global';
 
     /**
+     * Retrieve all global feature flags sorted by name with their enabled state.
+     *
      * @return array<int, array{name: string, enabled: bool}>
      */
     public function execute(): array
