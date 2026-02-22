@@ -6,6 +6,10 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- Fix backend feature-flag route validation and consolidate related controller rules (`codex`)
+  - `PUT /api/feature-flags/{name}` — now validates route `name` with same constraints as create
+  - `DELETE /api/feature-flags/{name}` — now validates route `name` with same constraints as create
+- Fix backend packages action resilience when composer files are unreadable/invalid JSON (`codex`)
 - Fix API category tabs so each `/api/:tab` route displays the correct frontend content pane (`codex`)
 - Fix API tab content not updating when clicking sub-tabs (`copilot`)
   - Reorder routes: place `/api/:tab` before `/api` for proper parameter matching

@@ -4,49 +4,67 @@ declare(strict_types=1);
 
 namespace App\Domain\Infos\Actions;
 
+use JsonException;
+
 final class GetPackagesAction
 {
+    /**
+     * @return array<int, array{name: string, constraint: string, version: ?string, dev: bool}>
+     */
     public function execute(): array
     {
-        $composerJsonPath = base_path('composer.json');
-        $composerLockPath = base_path('composer.lock');
+        $composerJson = $this->readJsonFile(base_path('composer.json'));
+        if ($composerJson === []) {
+            return [];
+        }
 
-        $composerJson = json_decode(file_get_contents($composerJsonPath), true);
         $require = array_keys($composerJson['require'] ?? []);
         $requireDev = array_keys($composerJson['require-dev'] ?? []);
 
-        $installedVersions = $this->getInstalledVersions($composerLockPath);
-
+        $installedVersions = $this->getInstalledVersions(base_path('composer.lock'));
         $packages = [];
 
-        foreach ($require as $name) {
-            $packages[] = [
-                'name' => $name,
-                'constraint' => $composerJson['require'][$name],
-                'version' => $installedVersions[$name] ?? null,
-                'dev' => false,
-            ];
-        }
+        $this->appendPackages($packages, $composerJson['require'] ?? [], $require, $installedVersions, false);
+        $this->appendPackages($packages, $composerJson['require-dev'] ?? [], $requireDev, $installedVersions, true);
 
-        foreach ($requireDev as $name) {
-            $packages[] = [
-                'name' => $name,
-                'constraint' => $composerJson['require-dev'][$name],
-                'version' => $installedVersions[$name] ?? null,
-                'dev' => true,
-            ];
-        }
+        usort($packages, static fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
 
         return $packages;
     }
 
+    /**
+     * @param  array<int, array{name: string, constraint: string, version: ?string, dev: bool}>  $packages
+     * @param  array<string, mixed>  $constraints
+     * @param  array<int, string>  $names
+     * @param  array<string, string>  $installedVersions
+     */
+    private function appendPackages(
+        array &$packages,
+        array $constraints,
+        array $names,
+        array $installedVersions,
+        bool $isDev
+    ): void {
+        foreach ($names as $name) {
+            $packages[] = [
+                'name' => $name,
+                'constraint' => (string) ($constraints[$name] ?? '*'),
+                'version' => $installedVersions[$name] ?? null,
+                'dev' => $isDev,
+            ];
+        }
+    }
+
+    /**
+     * @return array<string, string>
+     */
     private function getInstalledVersions(string $lockPath): array
     {
-        if (! file_exists($lockPath)) {
+        $lock = $this->readJsonFile($lockPath);
+        if ($lock === []) {
             return [];
         }
 
-        $lock = json_decode(file_get_contents($lockPath), true);
         $versions = [];
 
         foreach ($lock['packages'] ?? [] as $pkg) {
@@ -58,5 +76,28 @@ final class GetPackagesAction
         }
 
         return $versions;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function readJsonFile(string $path): array
+    {
+        if (! is_file($path) || ! is_readable($path)) {
+            return [];
+        }
+
+        try {
+            $contents = file_get_contents($path);
+            if ($contents === false || $contents === '') {
+                return [];
+            }
+
+            $decoded = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
+
+            return is_array($decoded) ? $decoded : [];
+        } catch (JsonException) {
+            return [];
+        }
     }
 }

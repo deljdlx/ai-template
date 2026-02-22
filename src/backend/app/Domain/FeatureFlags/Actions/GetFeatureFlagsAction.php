@@ -20,9 +20,9 @@ final class GetFeatureFlagsAction
 
         $names = DB::table('features')
             ->where('scope', self::GLOBAL_SCOPE)
+            ->distinct()
             ->orderBy('name')
             ->pluck('name')
-            ->unique()
             ->values();
 
         return $names
