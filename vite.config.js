@@ -3,6 +3,14 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: resolve(__dirname, 'src/frontend'),
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     outDir: resolve(__dirname, 'dist'),
     emptyOutDir: true,

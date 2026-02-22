@@ -7,3 +7,4 @@ export * from './math.js';
 export * from './strings.js';
 export * from './arrays.js';
 export * from './router.js';
+export * from './api.js';

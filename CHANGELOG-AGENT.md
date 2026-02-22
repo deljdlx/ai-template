@@ -6,6 +6,11 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add frontend API client module and demo page for backend communication (`claude`)
+  - `GET /api/infos` — combined stack info
+  - `GET /api/infos/laravel` — Laravel config
+  - `GET /api/infos/php` — PHP version and extensions
+  - `GET /api/infos/runtime` — app name, timestamps
 - Add API endpoint listing requirement to changelog instructions (`claude`)
 - Add infos domain API endpoints for Laravel stack diagnostics (`copilot`) — #19
   - `GET /api/infos` — all stack info (Laravel + PHP + runtime)
