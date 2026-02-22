@@ -58,4 +58,16 @@ describe('feature flags endpoints', function () {
             'enabled' => true,
         ])->assertUnprocessable()->assertJsonValidationErrors('name');
     });
+
+    it('validates feature flag route name on update', function () {
+        $this->putJson('/api/feature-flags/Invalid Name', [
+            'enabled' => true,
+        ])->assertUnprocessable()->assertJsonValidationErrors('name');
+    });
+
+    it('validates feature flag route name on delete', function () {
+        $this->deleteJson('/api/feature-flags/Invalid Name')
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('name');
+    });
 });
