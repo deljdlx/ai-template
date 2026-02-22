@@ -6,6 +6,12 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add multi-stack integration recipe for Vite + Laravel projects (`claude`)
+  - Vite proxy configuration (with `/api/` trailing slash gotcha)
+  - API client pattern with configurable `VITE_API_BASE`
+  - CORS setup for production deployments
+  - Cross-stack testing strategies (Vitest mocks + Pest HTTP tests)
+  - Dev workflow and dual-server setup
 - Add frontend API client module and demo page for backend communication (`claude`)
   - `GET /api/infos` — combined stack info
   - `GET /api/infos/laravel` — Laravel config

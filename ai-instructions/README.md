@@ -18,8 +18,9 @@ Un agent qui demarre une session doit lire dans cet ordre:
 | 7 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
 | 8 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
 | 9 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
+| 10 | `recipes/multi-stack-integration.md` | Integration Vite + Laravel (proxy, CORS, API client, workflow) — si les deux stacks sont presentes |
 
-Les items 1-4 sont **obligatoires**. Les items 5-9 sont **conditionnels** selon la stack du projet (JS et/ou Laravel).
+Les items 1-4 sont **obligatoires**. Les items 5-10 sont **conditionnels** selon la stack du projet (JS et/ou Laravel).
 
 ## Architecture du template
 
@@ -42,7 +43,8 @@ ai-instructions/
 └── recipes/
     ├── stack-vite.md             ← recipe JS/Vite
     ├── stack-laravel.md          ← recipe Laravel 12/SQLite
-    └── laravel-packages.md       ← packages extras (interactif)
+    ├── laravel-packages.md       ← packages extras (interactif)
+    └── multi-stack-integration.md ← integration Vite + Laravel (proxy, CORS, API)
 ```
 
 ## Checklist de bootstrap d'un nouveau projet
