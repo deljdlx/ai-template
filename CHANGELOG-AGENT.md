@@ -6,6 +6,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
+- Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 - Add cross-references between instruction files and migration conflict guidance (`claude`) — #15
 - Add interactive Laravel packages recipe: Sanctum, Passport, Spatie essentiels, extras (`claude`) — #12
 - Add Laravel coding instructions: DDD leger, Actions pattern, PHP robuste (`claude`) — #11

@@ -70,6 +70,97 @@ Route::middleware('auth:api')->group(function () {
 
 ---
 
+## Feature Flags — Pennant (recommande)
+
+Feature flags first-party Laravel. Rollout progressif, A/B testing, trunk-based development.
+
+```bash
+composer require laravel/pennant
+php artisan vendor:publish --provider="Laravel\Pennant\PennantServiceProvider"
+php artisan migrate
+```
+
+**Quand l'utiliser**: deploiement progressif de fonctionnalites, A/B testing, activer/desactiver des features par utilisateur ou segment, trunk-based development avec flags au lieu de branches longues.
+
+**Definir une feature** (class-based, recommande):
+
+```bash
+php artisan pennant:feature NewDashboard
+```
+
+```php
+namespace App\Features;
+
+class NewDashboard
+{
+    public function resolve(User $user): bool
+    {
+        return $user->isInternalTeamMember();
+    }
+}
+```
+
+**Verifier une feature**:
+
+```php
+use Laravel\Pennant\Feature;
+
+// Dans le code
+if (Feature::active(NewDashboard::class)) {
+    // ...
+}
+
+// Conditional execution
+Feature::when(NewDashboard::class,
+    fn () => $this->newDashboard(),
+    fn () => $this->legacyDashboard(),
+);
+```
+
+**En Blade**:
+
+```blade
+@feature(NewDashboard::class)
+    <!-- Nouveau dashboard -->
+@else
+    <!-- Ancien dashboard -->
+@endfeature
+```
+
+**Middleware** (proteger des routes):
+
+```php
+use Laravel\Pennant\Middleware\EnsureFeaturesAreActive;
+
+Route::middleware(EnsureFeaturesAreActive::using('new-api'))
+    ->group(function () {
+        // Routes accessibles uniquement si feature active
+    });
+```
+
+**Activer/desactiver** manuellement:
+
+```php
+Feature::activate(NewDashboard::class);           // Pour le scope courant
+Feature::for($user)->activate(NewDashboard::class); // Pour un user specifique
+Feature::activateForEveryone(NewDashboard::class);  // Pour tout le monde
+Feature::deactivateForEveryone(NewDashboard::class);
+Feature::purge(NewDashboard::class);               // Supprimer les valeurs stockees
+```
+
+**Tests** — utiliser le driver `array` pour isoler les tests:
+
+```xml
+<!-- phpunit.xml -->
+<env name="PENNANT_STORE" value="array"/>
+```
+
+```php
+Feature::define(NewDashboard::class, true); // Forcer la valeur en test
+```
+
+---
+
 ## Spatie — Essentiels
 
 ### Permission (roles & ACL)
