@@ -62,6 +62,32 @@ Apres un `git checkout` ou un changement de branche, verifier si `package-lock.j
 
 ## Structure projet typique
 
+**Avant de creer la stack, demander a l'utilisateur** si les fichiers frontend doivent etre places dans un sous-dossier `src/frontend/` ou directement a la racine de `src/`. Si le projet contient (ou contiendra) d'autres couches (backend, API, CLI, etc.), preferer `src/frontend/`.
+
+### Option A — `src/frontend/` (projet multi-couches)
+
+```
+src/frontend/
+├── index.html           # Page HTML (Vite root)
+├── main.js              # Point d'entree
+├── components/          # Composants UI
+├── core/                # Logique metier
+├── utils/               # Helpers purs
+├── styles/              # SCSS / CSS
+│   ├── _variables.scss  # Variables et tokens
+│   ├── _mixins.scss     # Mixins reutilisables
+│   ├── _base.scss       # Reset et styles de base
+│   └── main.scss        # Point d'entree SCSS (imports)
+├── assets/              # Images, fonts, etc.
+└── tests/
+    ├── unit/            # Tests unitaires (pure logic)
+    └── integration/     # Tests d'integration (DOM, API)
+```
+
+Dans ce cas, configurer Vite avec `root: 'src/frontend'` et `build.outDir` vers le `dist/` racine du projet.
+
+### Option B — `src/` (projet frontend uniquement)
+
 ```
 src/
 ├── main.js              # Point d'entree
