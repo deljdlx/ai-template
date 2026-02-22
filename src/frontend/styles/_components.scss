@@ -618,3 +618,76 @@
   color: var(--yellow);
   font-style: italic;
 }
+
+// ── API config ──────────────────────
+
+.api-config {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: vars.$space-md;
+  margin-bottom: vars.$space-lg;
+}
+
+.api-config__title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: vars.$space-xs;
+}
+
+.api-config__desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: vars.$space-md;
+}
+
+.api-config__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: vars.$space-sm;
+  margin-bottom: vars.$space-md;
+
+  @media (max-width: vars.$bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.api-config__item {
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: vars.$radius-sm;
+  padding: vars.$space-sm;
+}
+
+.api-config__label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.35rem;
+}
+
+.api-config__value {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--green);
+  word-break: break-word;
+}
+
+.api-config__list {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.35rem;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+
+  code {
+    font-family: var(--font-mono);
+    color: var(--yellow);
+  }
+}

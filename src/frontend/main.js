@@ -4,7 +4,7 @@ import { createRouter } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
-import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from './api.js';
+import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from './api.js';
 
 initTheme();
 
@@ -209,6 +209,34 @@ function apiBlock(name, endpoint) {
   `;
 }
 
+function renderApiConfig() {
+  const { baseUrl, envKey, endpoints } = API_CONFIG;
+
+  return `
+    <section class="api-config">
+      <h3 class="api-config__title">API Configuration</h3>
+      <p class="api-config__desc">Current frontend API client settings and resolved endpoint paths.</p>
+      <div class="api-config__grid">
+        <div class="api-config__item">
+          <span class="api-config__label">Base URL</span>
+          <code class="api-config__value">${esc(baseUrl)}</code>
+        </div>
+        <div class="api-config__item">
+          <span class="api-config__label">Environment Override</span>
+          <code class="api-config__value">${esc(envKey)}</code>
+        </div>
+      </div>
+      <ul class="api-config__list">
+        <li><code>infos</code> → <code>${esc(`${baseUrl}${endpoints.infos}`)}</code></li>
+        <li><code>laravel</code> → <code>${esc(`${baseUrl}${endpoints.laravel}`)}</code></li>
+        <li><code>php</code> → <code>${esc(`${baseUrl}${endpoints.php}`)}</code></li>
+        <li><code>runtime</code> → <code>${esc(`${baseUrl}${endpoints.runtime}`)}</code></li>
+        <li><code>packages</code> → <code>${esc(`${baseUrl}${endpoints.packages}`)}</code></li>
+      </ul>
+    </section>
+  `;
+}
+
 function renderApi({ tab = 'combined' } = {}) {
   const tabs = ['combined', 'framework', 'php', 'runtime', 'packages'];
   const activeTab = tabs.includes(tab) ? tab : 'combined';
@@ -217,6 +245,7 @@ function renderApi({ tab = 'combined' } = {}) {
     <a href="/" data-router-link class="back-link">&larr; back</a>
     <h2 class="page-title">API</h2>
     <p class="page-desc">Live data from the Laravel backend. Surprisingly real.</p>
+    ${renderApiConfig()}
 
     <nav class="api-tabs" data-api-tabs>
       <a href="/api/combined" data-router-link class="api-tabs__tab" data-active="${activeTab === 'combined'}">Combined</a>
