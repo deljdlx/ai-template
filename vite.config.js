@@ -5,7 +5,7 @@ export default defineConfig({
   root: resolve(__dirname, 'src/frontend'),
   server: {
     proxy: {
-      '/api': {
+      '/api/': {
         target: 'http://localhost:8000',
         changeOrigin: true,
       },
