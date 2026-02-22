@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from '../api.js';
+import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages, registerUser, loginUser } from '../api.js';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
@@ -8,8 +8,8 @@ function okResponse(data) {
   return { ok: true, status: 200, json: () => Promise.resolve(data) };
 }
 
-function errorResponse(status, statusText) {
-  return { ok: false, status, statusText };
+function errorResponse(status, statusText, body = {}) {
+  return { ok: false, status, statusText, json: () => Promise.resolve(body) };
 }
 
 beforeEach(() => {
@@ -97,5 +97,47 @@ describe('getPackages', () => {
 
     expect(result).toEqual(data);
     expect(mockFetch).toHaveBeenCalledWith('/api/infos/packages', expect.any(Object));
+  });
+});
+
+describe('registerUser', () => {
+  it('should POST to /api/auth/register', async () => {
+    const data = { user: { id: 1, name: 'Test', email: 'test@example.com' }, token: 'abc123' };
+    mockFetch.mockResolvedValue(okResponse(data));
+
+    const payload = { name: 'Test', email: 'test@example.com', password: 'secret123', password_confirmation: 'secret123' };
+    const result = await registerUser(payload);
+
+    expect(result).toEqual(data);
+    expect(mockFetch).toHaveBeenCalledWith('/api/auth/register', expect.objectContaining({
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }));
+  });
+
+  it('should throw with validation errors on 422', async () => {
+    mockFetch.mockResolvedValue(errorResponse(422, 'Unprocessable Entity', {
+      message: 'The email has already been taken.',
+      errors: { email: ['The email has already been taken.'] },
+    }));
+
+    await expect(registerUser({})).rejects.toThrow('The email has already been taken.');
+  });
+});
+
+describe('loginUser', () => {
+  it('should POST to /api/auth/login', async () => {
+    const data = { user: { id: 1, name: 'Test', email: 'test@example.com' }, token: 'xyz789' };
+    mockFetch.mockResolvedValue(okResponse(data));
+
+    const payload = { email: 'test@example.com', password: 'secret123' };
+    const result = await loginUser(payload);
+
+    expect(result).toEqual(data);
+    expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }));
   });
 });

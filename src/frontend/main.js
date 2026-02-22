@@ -4,7 +4,7 @@ import { createRouter } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
-import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages } from './api.js';
+import { API_CONFIG, getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo, getPackages, registerUser, loginUser } from './api.js';
 
 initTheme();
 
@@ -297,6 +297,80 @@ function renderApi({ tab = 'combined' } = {}) {
   `;
 }
 
+/* ─── AUTH PAGES ─── */
+
+function renderRegister() {
+  return `
+    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <h2 class="page-title">Register</h2>
+    <p class="page-desc">Create an account to get a Sanctum API token.</p>
+
+    <div class="auth-form">
+      <input class="demo-input u-full-width" data-input="reg-name" type="text" placeholder="Name" />
+      <input class="demo-input u-full-width" data-input="reg-email" type="email" placeholder="Email" />
+      <input class="demo-input u-full-width" data-input="reg-password" type="password" placeholder="Password (min 8 chars)" />
+      <input class="demo-input u-full-width" data-input="reg-password-confirm" type="password" placeholder="Confirm password" />
+      <button class="btn btn--primary u-full-width" data-auth="register">Register</button>
+      <div class="auth-result" data-auth-result="register"></div>
+      <p class="auth-link">Already have an account? <a href="/login" data-router-link>Login</a></p>
+    </div>
+  `;
+}
+
+function renderLogin() {
+  return `
+    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <h2 class="page-title">Login</h2>
+    <p class="page-desc">Authenticate and receive a Sanctum API token.</p>
+
+    <div class="auth-form">
+      <input class="demo-input u-full-width" data-input="login-email" type="email" placeholder="Email" />
+      <input class="demo-input u-full-width" data-input="login-password" type="password" placeholder="Password" />
+      <button class="btn btn--primary u-full-width" data-auth="login">Login</button>
+      <div class="auth-result" data-auth-result="login"></div>
+      <p class="auth-link">No account? <a href="/register" data-router-link>Register</a></p>
+    </div>
+  `;
+}
+
+async function handleAuth(action) {
+  bumpOps();
+  const el = app.querySelector(`[data-auth-result="${action}"]`);
+
+  try {
+    let result;
+    if (action === 'register') {
+      result = await registerUser({
+        name: val('reg-name'),
+        email: val('reg-email'),
+        password: val('reg-password'),
+        password_confirmation: val('reg-password-confirm'),
+      });
+    } else {
+      result = await loginUser({
+        email: val('login-email'),
+        password: val('login-password'),
+      });
+    }
+
+    if (el) {
+      el.className = 'auth-result auth-result--success';
+      el.innerHTML = `
+        <div class="auth-result__user">${esc(result.user.name)} (${esc(result.user.email)})</div>
+        <div class="auth-result__token-label">Token:</div>
+        <code class="auth-result__token">${esc(result.token)}</code>
+      `;
+    }
+  } catch (err) {
+    if (el) {
+      const errors = err.errors || {};
+      const details = Object.values(errors).flat().map((e) => esc(e)).join('<br>');
+      el.className = 'auth-result auth-result--error';
+      el.innerHTML = `<span class="auth-result__message">${esc(err.message)}</span>${details ? `<div class="auth-result__details">${details}</div>` : ''}`;
+    }
+  }
+}
+
 /* ─── API HANDLERS ─── */
 
 const API_HANDLERS = {
@@ -411,6 +485,8 @@ const router = createRouter({
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
+    { path: '/register', render: renderRegister },
+    { path: '/login', render: renderLogin },
     { path: '/api/:tab', render: ({ params }) => renderApi({ tab: params.tab }) },
     { path: '/api', render: () => renderApi() },
   ],
@@ -443,6 +519,12 @@ app.addEventListener('click', (event) => {
   const apiBtn = event.target.closest('[data-api]');
   if (apiBtn) {
     handleApi(apiBtn.dataset.api);
+    return;
+  }
+
+  const authBtn = event.target.closest('[data-auth]');
+  if (authBtn) {
+    handleAuth(authBtn.dataset.auth);
   }
 });
 

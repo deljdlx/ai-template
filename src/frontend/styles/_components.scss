@@ -691,3 +691,87 @@
     color: var(--yellow);
   }
 }
+
+// ── Auth forms ──────────────────────
+
+.auth-form {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$space-sm;
+}
+
+.auth-result {
+  padding: vars.$space-md;
+  border-radius: vars.$radius-sm;
+  font-size: 0.8rem;
+  word-break: break-all;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.auth-result--success {
+  background: rgba(var(--green-rgb, 80, 250, 123), 0.1);
+  border: 1px solid var(--green);
+}
+
+.auth-result--error {
+  background: rgba(var(--red-rgb, 255, 85, 85), 0.1);
+  border: 1px solid var(--red);
+}
+
+.auth-result__user {
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: vars.$space-xs;
+}
+
+.auth-result__token-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.25rem;
+}
+
+.auth-result__token {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--yellow);
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+.auth-result__message {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.auth-result__details {
+  margin-top: vars.$space-xs;
+  font-size: 0.75rem;
+  color: var(--red);
+}
+
+.auth-link {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: vars.$space-xs;
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.u-full-width {
+  width: 100%;
+}

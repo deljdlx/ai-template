@@ -39,6 +39,34 @@ async function fetchJson(path) {
   return response.json();
 }
 
+/**
+ * Posts JSON to the given API path.
+ * @param {string} path - Relative path under API_BASE
+ * @param {Object} body - Request body
+ * @returns {Promise<Object>}
+ */
+async function postJson(path, body) {
+  const url = `${API_BASE}${path}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    const message = data.message || `API ${response.status}: ${response.statusText}`;
+    const err = new Error(message);
+    err.errors = data.errors || {};
+    throw err;
+  }
+
+  return response.json();
+}
+
 /** @returns {Promise<Object>} Combined laravel + php + runtime infos */
 export const getInfos = () => fetchJson(API_ENDPOINTS.infos);
 
@@ -53,3 +81,17 @@ export const getRuntimeInfo = () => fetchJson(API_ENDPOINTS.runtime);
 
 /** @returns {Promise<Array>} List of installed Composer packages */
 export const getPackages = () => fetchJson(API_ENDPOINTS.packages);
+
+/**
+ * Register a new user.
+ * @param {{name: string, email: string, password: string, password_confirmation: string}} data
+ * @returns {Promise<{user: Object, token: string}>}
+ */
+export const registerUser = (data) => postJson('/auth/register', data);
+
+/**
+ * Login with email and password.
+ * @param {{email: string, password: string}} data
+ * @returns {Promise<{user: Object, token: string}>}
+ */
+export const loginUser = (data) => postJson('/auth/login', data);
