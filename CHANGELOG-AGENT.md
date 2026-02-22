@@ -6,6 +6,7 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Fixed
+- Fix API category tabs so each `/api/:tab` route displays the correct frontend content pane (`codex`)
 - Fix API tab content not updating when clicking sub-tabs (`copilot`)
   - Reorder routes: place `/api/:tab` before `/api` for proper parameter matching
   - Router now correctly matches parameterized routes before static ones
