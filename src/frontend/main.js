@@ -4,6 +4,7 @@ import { createRouter } from './router.js';
 import { add, multiply, fibonacci, isEven } from './math.js';
 import { reverse, isPalindrome, charFrequency, spongebobCase } from './strings.js';
 import { shuffle, flatten, unique, groupBy } from './arrays.js';
+import { getInfos, getLaravelInfo, getPhpInfo, getRuntimeInfo } from './api.js';
 
 initTheme();
 
@@ -57,6 +58,14 @@ function renderHome() {
         <div class="module-card__count">4 functions</div>
         <div class="module-card__fn">
           <code>shuffle</code> <code>flatten</code> <code>unique</code> <code>groupBy</code>
+        </div>
+      </a>
+      <a href="/api" data-router-link class="module-card">
+        <span class="module-card__icon">{&thinsp;}</span>
+        <div class="module-card__name">API</div>
+        <div class="module-card__count">4 endpoints</div>
+        <div class="module-card__fn">
+          <code>infos</code> <code>laravel</code> <code>php</code> <code>runtime</code>
         </div>
       </a>
     </div>
@@ -168,6 +177,66 @@ function renderArrays() {
   `;
 }
 
+function apiBlock(name, endpoint) {
+  return `
+    <div class="api-section">
+      <div class="api-section__header">
+        <span class="api-section__name">${name}</span>
+        <span class="api-section__endpoint">GET ${endpoint}</span>
+      </div>
+      <div class="api-section__body">
+        <button class="btn btn--primary" data-api="${name}">Fetch</button>
+        <div class="api-result api-result--empty" data-api-result="${name}">click fetch&hellip;</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderApi() {
+  return `
+    <a href="/" data-router-link class="back-link">&larr; back</a>
+    <h2 class="page-title">API</h2>
+    <p class="page-desc">Live data from the Laravel backend. Surprisingly real.</p>
+
+    ${apiBlock('infos', '/api/infos')}
+    ${apiBlock('laravel', '/api/infos/laravel')}
+    ${apiBlock('php', '/api/infos/php')}
+    ${apiBlock('runtime', '/api/infos/runtime')}
+  `;
+}
+
+/* ─── API HANDLERS ─── */
+
+const API_HANDLERS = {
+  infos: getInfos,
+  laravel: getLaravelInfo,
+  php: getPhpInfo,
+  runtime: getRuntimeInfo,
+};
+
+async function handleApi(name) {
+  bumpOps();
+  const handler = API_HANDLERS[name];
+  if (!handler) return;
+
+  const el = app.querySelector(`[data-api-result="${name}"]`);
+  if (el) {
+    el.classList.remove('api-result--empty');
+    el.innerHTML = '<span class="api-result__loading">fetching&hellip;</span>';
+  }
+
+  try {
+    const data = await handler();
+    if (el) {
+      el.innerHTML = `<pre class="api-result__json"><code>${esc(JSON.stringify(data, null, 2))}</code></pre>`;
+    }
+  } catch (err) {
+    if (el) {
+      el.innerHTML = `<span class="api-result__error">${esc(err.message)}</span>`;
+    }
+  }
+}
+
 /* ─── DEMO HANDLERS ─── */
 
 function val(name) {
@@ -249,6 +318,7 @@ const router = createRouter({
     { path: '/math', render: renderMath },
     { path: '/strings', render: renderStrings },
     { path: '/arrays', render: renderArrays },
+    { path: '/api', render: renderApi },
   ],
   notFound: ({ path }) => `
     <div class="not-found">
@@ -273,6 +343,12 @@ app.addEventListener('click', (event) => {
   const runBtn = event.target.closest('[data-run]');
   if (runBtn) {
     handleRun(runBtn.dataset.run);
+    return;
+  }
+
+  const apiBtn = event.target.closest('[data-api]');
+  if (apiBtn) {
+    handleApi(apiBtn.dataset.api);
   }
 });
 

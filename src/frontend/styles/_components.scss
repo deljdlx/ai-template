@@ -388,3 +388,73 @@
   font-size: 0.8rem;
   margin: vars.$space-md 0;
 }
+
+// ── API sections ────────────────────
+
+.api-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: vars.$space-md;
+  overflow: hidden;
+}
+
+.api-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem vars.$space-md;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-input);
+}
+
+.api-section__name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.api-section__endpoint {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.api-section__body {
+  padding: vars.$space-md;
+}
+
+.api-result {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.75rem vars.$space-md;
+  background: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: vars.$radius-sm;
+  font-size: 0.8rem;
+  min-height: 2.4rem;
+}
+
+.api-result--empty {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.api-result__json {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--green);
+}
+
+.api-result__error {
+  color: var(--red);
+}
+
+.api-result__loading {
+  color: var(--yellow);
+  font-style: italic;
+}
