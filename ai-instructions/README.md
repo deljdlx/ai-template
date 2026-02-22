@@ -16,6 +16,7 @@ Un agent qui demarre une session doit lire dans cet ordre:
 | 5 | `laravel-coding.md` | Architecture Laravel (DDD leger, Actions, Models, PHP robuste) — si stack Laravel |
 | 6 | `recipes/stack-vite.md` | Recipe JS/Vite — si le projet utilise cette stack |
 | 7 | `recipes/stack-laravel.md` | Recipe Laravel 12 — si le projet utilise cette stack |
+| 8 | `recipes/laravel-packages.md` | Catalogue packages extras (Sanctum, Spatie, etc.) — interactif |
 
 Les recipes sont **conditionnelles**: ne lire que celles correspondant a la stack du projet.
 
@@ -38,7 +39,8 @@ ai-instructions/
 ├── laravel-coding.md             ← architecture Laravel (DDD leger, Actions, PHP robuste)
 └── recipes/
     ├── stack-vite.md             ← recipe JS/Vite
-    └── stack-laravel.md          ← recipe Laravel 12/SQLite
+    ├── stack-laravel.md          ← recipe Laravel 12/SQLite
+    └── laravel-packages.md       ← packages extras (interactif)
 ```
 
 ## Checklist de bootstrap d'un nouveau projet
