@@ -21,8 +21,8 @@ Regles git pour tous les agents. Source de verite unique.
 
 1. Aucun agent ne doit changer la branche active du working tree de l'utilisateur.
 2. Interdit de `git checkout <autre-branche>` dans le working tree principal pour merge/rebase/cherry-pick.
-3. Le working tree principal est accessible en lecture/ecriture pour les edits de code uniquement.
-4. En mode non-autonome, le working tree principal est en **lecture seule** sauf demande explicite de l'utilisateur.
+3. En **mode non-autonome** (par defaut): l'agent peut lire et editer le code dans le working tree principal quand l'utilisateur le demande. Les operations git (commit, push, checkout) restent interdites sauf demande explicite.
+4. En **mode autonome**: l'agent travaille UNIQUEMENT dans son worktree isole. Le working tree principal est en **lecture seule**.
 
 ## 4. Worktrees isoles
 
@@ -41,6 +41,22 @@ Regles git pour tous les agents. Source de verite unique.
 6. **Recovery HEAD detache**: `git checkout -b AGENT_NAME/FEATURE_NAME` pour reattacher, ou `git checkout origin/main` pour repartir propre.
 
 ## 5. Mode autonome
+
+### Declencheurs
+
+Le mode autonome s'active quand l'utilisateur utilise une de ces formulations (ou equivalentes):
+
+| Formulation | Langue |
+|-------------|--------|
+| "en autonomie", "en autonome", "en mode autonome" | FR |
+| "autonomously", "autonomous mode", "on your own" | EN |
+| "sans supervision", "sans attendre" | FR |
+| "fais une PR", "publie", "publish" | FR/EN |
+| "dans ton worktree" | FR |
+
+En cas de doute, traiter comme autonome et utiliser le worktree isole. Il vaut mieux etre trop prudent.
+
+### Regles
 
 1. Si l'utilisateur demande "en autonomie" (ou formulation equivalente), l'agent DOIT travailler dans son worktree isole uniquement.
 2. En mode autonome, l'agent DOIT utiliser une branche dediee `AGENT_NAME/FEATURE_NAME`.
@@ -75,6 +91,23 @@ git status
 git fetch origin
 git checkout -b AGENT_NAME/FEATURE_NAME origin/main
 ```
+
+### Pre-flight checklist
+
+Avant de commencer une tache, verifier ces points dans l'ordre:
+
+1. **Instructions lues**: `ai-instructions/` (obligatoires: philosophy, git, changelog, css-scss ; conditionnels: laravel-coding, recipes selon la stack)
+2. **Worktree pret**: branche `AGENT_NAME/FEATURE_NAME` creee depuis `origin/main` a jour
+3. **Pas de changements pendants**: `git status` propre
+4. **Dependances a jour**: `npm install` / `composer install` si necessaire
+
+Avant de publier une PR, verifier:
+
+5. **Tests**: `php artisan test` ou `npm test` selon la stack
+6. **Lint/style**: `./vendor/bin/pint --test` ou equivalent
+7. **Analyse statique**: `./vendor/bin/phpstan analyse` si Laravel
+8. **Changelog**: `CHANGELOG-AGENT.md` mis a jour dans `[Unreleased]`
+9. **Rebase**: `git rebase origin/main` reussi
 
 ## 6. Workflow de publication
 
