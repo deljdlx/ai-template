@@ -140,6 +140,60 @@
   min-width: 80px;
 }
 
+// ── Home intro (about the stack) ─────
+
+.home-intro {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: vars.$space-lg;
+  margin-bottom: vars.$space-md;
+}
+
+.home-intro__title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-style: italic;
+  margin-bottom: vars.$space-sm;
+}
+
+.home-intro__text {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: vars.$space-md;
+
+  strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+}
+
+.home-intro__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.8;
+
+  li {
+    color: var(--text-dim);
+    padding: 0.25rem 0;
+
+    strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+  }
+
+  li::before {
+    content: '→ ';
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 0.5rem;
+  }
+}
+
 // ── Cards (home page) ────────────────
 
 .home-grid {
