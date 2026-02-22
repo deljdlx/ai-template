@@ -1,0 +1,19 @@
+# Instructions Codex — {{PROJECT}}
+
+## Identite agent
+
+- **Nom**: `codex`
+- **Branches**: `codex/*`
+- **Prefixe PR**: `codex: ...`
+- **Worktree isole**: `/tmp/{{PROJECT}}-codex-worktree` (fixe, reutilise entre les taches)
+
+## Instructions partagees
+
+**Lire TOUS les fichiers dans `ai-instructions/` au debut de chaque tache.**
+Ces fichiers sont la source de verite pour le style, les regles, la branch safety, le workflow de publication, le mode autonome, et le travail concurrent.
+
+Au debut de chaque session, confirmer la lecture de ces instructions.
+
+## Specifique Codex
+
+_(Ajouter ici les regles specifiques a Codex si necessaire.)_
