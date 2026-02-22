@@ -35,6 +35,11 @@ Format inspire de [Keep a Changelog](https://keepachangelog.com/).
 - Add Laravel Pennant (feature flags) as recommended package in extras recipe (`claude`) — #16
 
 ### Changed
+- Organize frontend API page with categorical sections (`copilot`)
+  - Group endpoints into 5 semantic categories: Combined Diagnostics, Framework Information, PHP Runtime, Application Runtime, Dependencies
+  - Add descriptive titles and explanations for each category
+  - Improve visual hierarchy with `.api-category` styling
+  - Better UX for understanding endpoint purpose and relationships
 - Redesign frontend homepage to explain stack purpose and architecture (`copilot`)
   - Add introductory section highlighting key technologies (Vite, vanilla JS, responsive CSS)
   - Document core features (client-side routing, component architecture, API integration, theme management, testing)

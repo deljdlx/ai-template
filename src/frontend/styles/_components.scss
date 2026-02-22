@@ -443,6 +443,31 @@
   margin: vars.$space-md 0;
 }
 
+// ── API categories ───────────────────
+
+.api-category {
+  margin-bottom: vars.$space-xl;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.api-category__title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: vars.$space-xs;
+  color: var(--text);
+}
+
+.api-category__desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: vars.$space-md;
+  line-height: 1.5;
+}
+
 // ── API sections ────────────────────
 
 .api-section {
@@ -451,6 +476,10 @@
   border-radius: var(--radius);
   margin-bottom: vars.$space-md;
   overflow: hidden;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .api-section__header {

@@ -213,11 +213,35 @@ function renderApi() {
     <h2 class="page-title">API</h2>
     <p class="page-desc">Live data from the Laravel backend. Surprisingly real.</p>
 
-    ${apiBlock('infos', '/api/infos')}
-    ${apiBlock('laravel', '/api/infos/laravel')}
-    ${apiBlock('php', '/api/infos/php')}
-    ${apiBlock('runtime', '/api/infos/runtime')}
-    ${apiBlock('packages', '/api/infos/packages')}
+    <div class="api-category">
+      <h3 class="api-category__title">Combined Diagnostics</h3>
+      <p class="api-category__desc">Aggregate information across the entire stack</p>
+      ${apiBlock('infos', '/api/infos')}
+    </div>
+
+    <div class="api-category">
+      <h3 class="api-category__title">Framework Information</h3>
+      <p class="api-category__desc">Laravel version, environment, configuration</p>
+      ${apiBlock('laravel', '/api/infos/laravel')}
+    </div>
+
+    <div class="api-category">
+      <h3 class="api-category__title">PHP Runtime</h3>
+      <p class="api-category__desc">PHP version, SAPI, extensions, and capabilities</p>
+      ${apiBlock('php', '/api/infos/php')}
+    </div>
+
+    <div class="api-category">
+      <h3 class="api-category__title">Application Runtime</h3>
+      <p class="api-category__desc">Server timestamps, timezone, and app metadata</p>
+      ${apiBlock('runtime', '/api/infos/runtime')}
+    </div>
+
+    <div class="api-category">
+      <h3 class="api-category__title">Dependencies</h3>
+      <p class="api-category__desc">Installed Composer packages and versions</p>
+      ${apiBlock('packages', '/api/infos/packages')}
+    </div>
   `;
 }
 
